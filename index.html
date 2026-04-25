@@ -164,6 +164,38 @@ footer{width:100%;border-top:1px solid var(--border);padding:18px 24px;text-alig
 .otter-sprite{position:absolute;bottom:6px;transform:scale(0.5);transform-origin:bottom left;animation:otterZip 4s linear infinite}
 @keyframes otterZip{0%{left:-20px;opacity:0}10%{opacity:1}90%{opacity:1}100%{left:calc(100% + 20px);opacity:0}}
 @media(max-width:540px){.brand-name{font-size:32px}.principles-grid{grid-template-columns:1fr}.install-cmd code{font-size:11px}.split-body{height:220px}.term-line{font-size:9px;line-height:1.5}.split-terminal{padding:10px}.vp-header{font-size:13px}.vp-card{padding:7px 9px;font-size:9px;margin-bottom:4px}.vp-badge{font-size:8px}.vp-page{padding:10px}.critter svg{transform:scale(0.8);transform-origin:bottom left}.raccoon-sprite{right:6px}.beaver-sprite{left:6px;bottom:4px}}
+
+/* ---------- iPhone story carousel (scoped under .iphone-story) ---------- */
+.iphone-story { margin: 64px 0 48px; }
+.iphone-story .is-head { max-width: 760px; margin: 0 auto; text-align: center; padding: 24px 24px 16px; }
+.iphone-story .is-eyebrow { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--terra); margin: 0 0 12px; }
+.iphone-story .is-head h2 { font-family: "Preahvihear", serif; font-weight: 400; font-size: clamp(26px, 4vw, 42px); line-height: 1.1; margin: 0 0 14px; letter-spacing: -0.01em; }
+.iphone-story .is-head p { color: var(--ink-2); font-size: 16px; margin: 0; max-width: 560px; margin-inline: auto; }
+.iphone-story .is-carousel { --phone-w: min(62vw, 280px); position: relative; max-width: 980px; margin: 24px auto 0; padding: 24px 0 24px; }
+@media (min-width: 900px) { .iphone-story .is-carousel { --phone-w: 320px; } }
+.iphone-story .is-track { display: flex; gap: 32px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; padding: 12px calc(50% - var(--phone-w) / 2); scrollbar-width: none; }
+.iphone-story .is-track::-webkit-scrollbar { display: none; }
+.iphone-story .is-slide { flex: 0 0 auto; width: var(--phone-w); scroll-snap-align: center; text-align: center; }
+.iphone-story .is-phone { width: 100%; aspect-ratio: 9 / 19.5; background: #000; border-radius: 36px; overflow: hidden; position: relative; box-shadow: 0 1px 0 rgba(255,255,255,.08) inset, 0 28px 50px -22px rgba(0,0,0,.35), 0 8px 18px -8px rgba(0,0,0,.25); }
+.iphone-story .is-phone video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.iphone-story .is-play-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,.35); cursor: pointer; transition: opacity .25s ease, background .25s ease; z-index: 2; border: 0; }
+.iphone-story .is-play-overlay.is-hidden { opacity: 0; pointer-events: none; }
+.iphone-story .is-play-overlay:hover { background: rgba(0,0,0,.45); }
+.iphone-story .is-play-btn { width: 56px; height: 56px; border-radius: 999px; background: rgba(255,255,255,.92); display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(0,0,0,.35); transition: transform .2s; }
+.iphone-story .is-play-overlay:hover .is-play-btn { transform: scale(1.06); }
+.iphone-story .is-play-btn::before { content: ""; border-style: solid; border-width: 9px 0 9px 14px; border-color: transparent transparent transparent #1a1a1a; margin-left: 4px; }
+.iphone-story .is-slide-copy { margin-top: 22px; padding: 0 8px; }
+.iphone-story .is-step { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 999px; border: 1.5px solid var(--terra); color: var(--terra); font-family: "Preahvihear", serif; font-size: 13px; line-height: 1; margin-bottom: 10px; }
+.iphone-story .is-slide-copy h3 { font-family: "Preahvihear", serif; font-weight: 400; font-size: 20px; line-height: 1.25; margin: 0 0 6px; letter-spacing: -0.005em; }
+.iphone-story .is-slide-copy p { color: var(--ink-2); font-size: 13.5px; line-height: 1.5; margin: 0; }
+.iphone-story .is-nav { position: absolute; top: 38%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 999px; border: 1px solid rgba(0,0,0,.1); background: rgba(255,255,255,.85); backdrop-filter: blur(8px); color: var(--ink); cursor: pointer; font-size: 18px; line-height: 1; display: flex; align-items: center; justify-content: center; transition: background .2s, transform .2s; z-index: 5; }
+.iphone-story .is-nav:hover { background: #fff; transform: translateY(-50%) scale(1.06); }
+.iphone-story .is-nav.is-prev { left: 12px; }
+.iphone-story .is-nav.is-next { right: 12px; }
+@media (max-width: 700px) { .iphone-story .is-nav { display: none; } }
+.iphone-story .is-dots { display: flex; justify-content: center; gap: 8px; margin-top: 8px; }
+.iphone-story .is-dot { width: 8px; height: 8px; border-radius: 999px; background: rgba(0,0,0,.18); border: 0; padding: 0; cursor: pointer; transition: background .2s, width .2s; }
+.iphone-story .is-dot.is-active { background: var(--terra); width: 22px; }
 </style>
 </head>
 <body>
@@ -280,6 +312,59 @@ footer{width:100%;border-top:1px solid var(--border);padding:18px 24px;text-alig
       </div>
     </div>
   </div>
+
+  <section class="iphone-story" aria-label="how it works on your phone">
+    <div class="is-head">
+      <p class="is-eyebrow">how it works</p>
+      <h2>your apps. your machine. anywhere you are.</h2>
+      <p>three phones tell the story — from your laptop, to your pocket, to a wolt that builds for you.</p>
+    </div>
+
+    <div class="is-carousel">
+      <button class="is-nav is-prev" aria-label="previous">‹</button>
+      <button class="is-nav is-next" aria-label="next">›</button>
+
+      <div class="is-track" id="is-track">
+        <article class="is-slide">
+          <div class="is-phone">
+            <video src="media/telegram-demo.mp4" muted loop playsinline preload="metadata"></video>
+            <button class="is-play-overlay" aria-label="play video"><span class="is-play-btn"></span></button>
+          </div>
+          <div class="is-slide-copy">
+            <span class="is-step">1</span>
+            <h3>the lodge, in your pocket</h3>
+            <p>open the URL on your phone. your wolts are right there — no app install.</p>
+          </div>
+        </article>
+
+        <article class="is-slide">
+          <div class="is-phone">
+            <video src="media/telegram-demo.mp4" muted loop playsinline preload="metadata"></video>
+            <button class="is-play-overlay" aria-label="play video"><span class="is-play-btn"></span></button>
+          </div>
+          <div class="is-slide-copy">
+            <span class="is-step">2</span>
+            <h3>pick a wolt</h3>
+            <p>different wolts for different jobs. one tap to switch — telegram remembers.</p>
+          </div>
+        </article>
+
+        <article class="is-slide">
+          <div class="is-phone">
+            <video src="media/telegram-demo.mp4" muted loop playsinline preload="metadata"></video>
+            <button class="is-play-overlay" aria-label="play video"><span class="is-play-btn"></span></button>
+          </div>
+          <div class="is-slide-copy">
+            <span class="is-step">3</span>
+            <h3>it actually does the work</h3>
+            <p>send a prompt. claude code spins up on your laptop, builds, and replies back.</p>
+          </div>
+        </article>
+      </div>
+
+      <div class="is-dots" id="is-dots"></div>
+    </div>
+  </section>
 
   <section>
     <div class="section-label">The builders</div>
@@ -831,6 +916,73 @@ function renderCloud(map,px){var cols=Math.max.apply(null,map.map(function(r){re
   if(mo){mo.className='critter otter-sprite';mo.innerHTML='';mo.appendChild(makeSprite(ottFrames,ottW,ottH,4));}
 })();
 </script>
+
+<script>
+// iPhone story carousel
+(function(){
+  const track = document.getElementById('is-track');
+  if (!track) return;
+  const slides = [...track.querySelectorAll('.is-slide')];
+  const dotsEl = document.getElementById('is-dots');
+  const prev = document.querySelector('.iphone-story .is-nav.is-prev');
+  const next = document.querySelector('.iphone-story .is-nav.is-next');
+
+  slides.forEach((_, i) => {
+    const b = document.createElement('button');
+    b.className = 'is-dot' + (i === 0 ? ' is-active' : '');
+    b.setAttribute('aria-label', 'go to slide ' + (i+1));
+    b.addEventListener('click', () => scrollTo(i));
+    dotsEl.appendChild(b);
+  });
+
+  function activeIndex(){
+    const center = track.scrollLeft + track.clientWidth / 2;
+    let best = 0, bestD = Infinity;
+    slides.forEach((s, i) => {
+      const c = s.offsetLeft + s.offsetWidth / 2;
+      const d = Math.abs(center - c);
+      if (d < bestD) { bestD = d; best = i; }
+    });
+    return best;
+  }
+  function scrollTo(i){
+    const s = slides[i]; if (!s) return;
+    const target = s.offsetLeft - (track.clientWidth - s.offsetWidth) / 2;
+    track.scrollTo({ left: target, behavior: 'smooth' });
+  }
+  function syncDots(){
+    const i = activeIndex();
+    [...dotsEl.children].forEach((d, k) => d.classList.toggle('is-active', k === i));
+  }
+  function syncPlayback(){
+    const active = activeIndex();
+    slides.forEach((s, i) => {
+      const v = s.querySelector('video'); if (!v) return;
+      if (i === active) { v.play().catch(() => {}); }
+      else { v.pause(); v.currentTime = 0; }
+    });
+  }
+
+  track.addEventListener('scroll', () => requestAnimationFrame(() => { syncDots(); syncPlayback(); }));
+  prev.addEventListener('click', () => scrollTo(Math.max(0, activeIndex() - 1)));
+  next.addEventListener('click', () => scrollTo(Math.min(slides.length - 1, activeIndex() + 1)));
+
+  slides.forEach(slide => {
+    const v = slide.querySelector('video');
+    const overlay = slide.querySelector('.is-play-overlay');
+    if (!v || !overlay) return;
+    overlay.addEventListener('click', (e) => {
+      e.stopPropagation();
+      v.play().then(() => overlay.classList.add('is-hidden')).catch(() => {});
+    });
+    v.addEventListener('pause', () => overlay.classList.remove('is-hidden'));
+    v.addEventListener('play', () => overlay.classList.add('is-hidden'));
+  });
+
+  requestAnimationFrame(() => { scrollTo(0); syncPlayback(); });
+})();
+</script>
+
 </body>
 </html>
 

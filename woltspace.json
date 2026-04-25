@@ -1,0 +1,9 @@
+{
+  "name": "woltspace-site",
+  "description": "woltspace.com — the marketing site (split from platform monorepo)",
+  "stack": "python",
+  "port": 4012,
+  "start": "python -m http.server $PORT",
+  "keeper": "uxwolt",
+  "emoji": "🌐"
+}
