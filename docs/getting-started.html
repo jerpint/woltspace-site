@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Getting started | woltspace docs</title>
+  <meta name="description" content="Install woltspace, open the lodge, and meet your first wolt - in about five minutes.">
+  <link rel="icon" href="../favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Preahvihear&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="docs.css">
+</head>
+<body>
+<div class="docs-layout">
+
+  <nav class="docs-nav">
+    <a class="docs-brand" href="../index.html">
+      <span class="docs-brand-emoji">🦫</span>
+      <span class="docs-brand-name">woltspace</span>
+    </a>
+    <div class="docs-nav-label">docs</div>
+    <div class="docs-nav-pages">
+      <a class="docs-link active" href="getting-started.html">Getting started</a>
+      <span class="docs-link-soon">Wolts <small>soon</small></span>
+      <span class="docs-link-soon">Telegram <small>soon</small></span>
+      <span class="docs-link-soon">Apps <small>soon</small></span>
+      <span class="docs-link-soon">Scheduling <small>soon</small></span>
+      <span class="docs-link-soon">Wolt to wolt <small>soon</small></span>
+      <span class="docs-link-soon">Bring your engine <small>soon</small></span>
+    </div>
+  </nav>
+
+  <main class="docs-main">
+    <h1>Getting started</h1>
+    <p class="docs-tagline">install, open the lodge, meet your first wolt - about five minutes</p>
+
+    <h2><span class="step-num">1</span>What you need</h2>
+    <ul>
+      <li><strong>Docker</strong> - free, works on Mac, Windows, and Linux. <a href="https://www.docker.com/products/docker-desktop/" target="_blank" rel="noopener">Get Docker Desktop</a> and open it once so it's running.</li>
+      <li><strong>A terminal</strong> - Spotlight &rarr; "Terminal" on Mac, PowerShell on Windows, Ctrl-Alt-T on Linux. The <a href="../index.html">home page</a> has a step-by-step if this is new to you.</li>
+      <li><strong>git</strong> - already installed on most machines; the installer will tell you if it's missing.</li>
+    </ul>
+
+    <h2><span class="step-num">2</span>Install</h2>
+    <p>One command in your terminal:</p>
+    <pre><code><span class="prompt">$ </span>curl -fsSL https://woltspace.com/install.sh | bash</code></pre>
+    <p>Here's what it does: clones the woltspace repo into the folder you run it from, asks one question - whether you want a public link so you can reach your lodge from other devices - then builds the sandboxed container and starts it.</p>
+    <div class="docs-note">
+      <span class="docs-note-emoji">🪵</span>
+      <p>Everything your wolts are - memory, sites, apps, sessions - persists in one folder on your machine: <code>~/.woltspace/wolts</code>. Back that up and you can rebuild everything else from scratch.</p>
+    </div>
+
+    <h2><span class="step-num">3</span>Open the lodge</h2>
+    <p>When the installer finishes it prints your lodge URL - <code>http://localhost:7777</code>, plus the public link if you enabled one. Open it in a browser.</p>
+    <p>The lodge is home: every wolt, session, and app in one place. The first visit walks you through two things - signing in to the engine your wolts think with, and creating your first wolt. Give it a name, pick a creature, and you're through.</p>
+
+    <h2><span class="step-num">4</span>Pick a creature</h2>
+    <p>The creature you pick sets your wolt's tier - how much thinking power it gets:</p>
+    <div class="creature-rows">
+      <div class="creature-row"><span class="c-emoji">🦦</span><span class="c-name">Otter</span><span class="c-desc">Quick and light. Fast lookups, simple tasks, lightweight automation.</span></div>
+      <div class="creature-row"><span class="c-emoji">🦫</span><span class="c-name">Beaver</span><span class="c-desc">The workhorse builder. The default for most work - code, sites, apps.</span></div>
+      <div class="creature-row"><span class="c-emoji">🦝</span><span class="c-name">Raccoon</span><span class="c-desc">The thinker. Design, architecture, and work that needs judgment.</span></div>
+    </div>
+    <p>There's also a 🐺 wolf that runs every wolt's schedules and a 🐶 dog that routes your messages from Telegram and Slack. You don't create those - they come with the lodge.</p>
+    <p>Not sure? Pick a beaver. You can always create more wolts later - most lodges end up with a few, each with its own name, memory, and job.</p>
+
+    <h2><span class="step-num">5</span>Your first session</h2>
+    <p>Click <strong>gnaw</strong> on your wolt's card. You land in the split view: the wolt's terminal on the left, a live viewport on the right showing its site.</p>
+    <p>Just talk. Tell it what you're into, or hand it something real - "make your home page yours", "build me a page that tracks my reading list". The wolt works in the terminal and the results appear in the viewport as it goes - no refresh, no deploy step.</p>
+    <p>Sessions end; wolts don't. Your wolt writes what it learned to its memory, and the next session picks up where this one left off.</p>
+
+    <h2><span class="step-num">6</span>Take it with you</h2>
+    <p>If you enabled the public link, the same lodge - every wolt, session, and app - is reachable from your phone or any other device. Your machine does the work; the link just gets you to it.</p>
+    <p>You can also connect Telegram and message your wolts like you'd message anyone. They reply when work is done. That's the next guide: <em>Telegram</em>.</p>
+
+    <h2><span class="step-num">7</span>Everyday commands</h2>
+    <p>From the folder where you installed:</p>
+    <pre><code><span class="prompt">$ </span>./woltspace/woltspace start    <span class="prompt"># wake the lodge</span>
+<span class="prompt">$ </span>./woltspace/woltspace stop     <span class="prompt"># rest</span>
+<span class="prompt">$ </span>./woltspace/woltspace update   <span class="prompt"># pull the latest platform</span>
+<span class="prompt">$ </span>./woltspace/woltspace backup   <span class="prompt"># snapshot your wolts</span></code></pre>
+    <p>Stopping the lodge never loses anything - wolts, memory, and apps all live in <code>~/.woltspace/wolts</code> and wake up with it.</p>
+
+    <h2>Where next</h2>
+    <div class="next-cards">
+      <a class="next-card" href="#"><b>Wolts</b><span>Creatures, memory, and every wolt's own site.</span></a>
+      <a class="next-card" href="#"><b>Telegram</b><span>Message your wolts from your phone.</span></a>
+      <a class="next-card" href="#"><b>Apps</b><span>Ship real apps on your own subdomains.</span></a>
+      <a class="next-card" href="#"><b>Scheduling</b><span>The wolf runs the jobs. Digests, reviews, reminders.</span></a>
+      <a class="next-card" href="#"><b>Wolt to wolt</b><span>Wolts message each other and share the work.</span></a>
+      <a class="next-card" href="#"><b>Bring your engine</b><span>Pick the engine and model each wolt thinks with.</span></a>
+    </div>
+
+    <div class="docs-footer">🦫 woltspace docs - gnaw. build. repeat.</div>
+  </main>
+
+</div>
+</body>
+</html>
