@@ -1,9 +1,9 @@
 {
   "name": "woltspace-site",
-  "description": "woltspace.com \u2014 the marketing site (split from platform monorepo)",
-  "stack": "python",
+  "description": "woltspace.com \u2014 the marketing site + docs (Astro/Starlight)",
+  "stack": "node",
   "port": 4012,
-  "start": "python server.py $PORT",
+  "start": "npm install && npx astro dev --host --port $PORT",
   "keeper": "uxwolt",
   "emoji": "\ud83c\udf10",
   "public": true
