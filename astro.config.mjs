@@ -31,6 +31,7 @@ export default defineConfig({
             { label: 'The TUI', slug: 'docs/tui' },
             { label: 'Telegram', slug: 'docs/telegram' },
             { label: 'Apps', slug: 'docs/apps' },
+            { label: 'External access', slug: 'docs/external-access' },
             { label: 'Scheduling', slug: 'docs/scheduling' },
             { label: 'Wolt orchestration', slug: 'docs/orchestration' },
             { label: 'Bring your engine', slug: 'docs/bring-your-engine' },
