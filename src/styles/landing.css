@@ -149,3 +149,7 @@ main:has(.ws-landing) footer.sl-flex{display:none}
 
 .ws-landing .ws-brand-word{font-family:var(--font-display);font-size:0.95em;color:var(--ink)}
 .ws-landing .principles-grid{padding:0;margin:0}
+/* Docs CTA in the install card - the "I installed it, now what?" moment */
+.ws-landing .install-next{display:flex;align-items:center;gap:16px;margin-top:16px;flex-wrap:wrap}
+.ws-landing .docs-cta{font-family:var(--font-mono);font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--terra);text-decoration:none;padding:9px 16px;border:1.5px solid var(--terra);border-radius:7px;transition:background 0.15s,color 0.15s}
+.ws-landing .docs-cta:hover{background:var(--terra);color:#fff}
