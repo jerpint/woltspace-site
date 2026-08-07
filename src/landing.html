@@ -120,6 +120,10 @@ p:last-child{margin-bottom:0}
 .wolt-callout a{color:var(--terra);text-decoration:none;border-bottom:1px solid rgba(196,83,30,0.35)}
 .wolt-callout a:hover{border-color:var(--terra)}
 .main-nav{display:flex;gap:4px;margin-top:44px;animation:fadeUp 0.7s ease 0.62s both}
+.header-row{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.header-row .brand{margin-bottom:0}
+.header-nav{display:flex;gap:4px}
+.site-header .brand-tagline{margin-top:10px}
 .nav-link{font-family:var(--font-mono);font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-3);text-decoration:none;padding:8px 14px;border:1px solid var(--border);border-radius:5px;background:var(--surface);transition:all 0.12s}
 .nav-link:hover{border-color:var(--border-2);color:var(--ink);background:var(--surface-2)}
 footer{width:100%;border-top:1px solid var(--border);padding:18px 24px;text-align:center;font-family:var(--font-mono);font-size:11px;color:var(--ink-3);letter-spacing:0.06em}
@@ -217,9 +221,15 @@ footer{width:100%;border-top:1px solid var(--border);padding:18px 24px;text-alig
 </div>
 <div class="page-wrap">
   <header class="site-header">
-    <div class="brand">
-      <span class="brand-emoji">🦫</span>
-      <h1 class="brand-name">woltspace</h1>
+    <div class="header-row">
+      <div class="brand">
+        <span class="brand-emoji">🦫</span>
+        <h1 class="brand-name">woltspace</h1>
+      </div>
+      <nav class="header-nav">
+        <a class="nav-link" href="/docs/getting-started/">Docs</a>
+        <a class="nav-link" href="https://github.com/jerpint/woltspace">GitHub</a>
+      </nav>
     </div>
     <p class="brand-tagline">gnaw. build. repeat.</p>
   </header>
@@ -406,6 +416,7 @@ footer{width:100%;border-top:1px solid var(--border);padding:18px 24px;text-alig
     </div>
   </section>
   <nav class="main-nav">
+    <a class="nav-link" href="/docs/getting-started/">Docs</a>
     <a class="nav-link" href="llms.txt">llms.txt</a>
     <a class="nav-link" href="https://github.com/jerpint/woltspace">GitHub</a>
   </nav>
