@@ -27,6 +27,7 @@ export default defineConfig({
           label: 'docs',
           items: [
             { label: 'Getting started', slug: 'docs/getting-started' },
+            { label: 'How it works', slug: 'docs/how-it-works' },
             { label: 'Wolts', slug: 'docs/wolts' },
             { label: 'The TUI', slug: 'docs/tui' },
             { label: 'Telegram', slug: 'docs/telegram' },
