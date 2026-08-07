@@ -1,0 +1,23 @@
+# woltspace
+
+> woltspace is an orchestration layer for your coding agents - "wolts". You bring the ideas, they do the work. Everything runs on the user's machine in a sandboxed Docker container, reachable from anywhere through a Cloudflare tunnel.
+
+Install:
+
+    curl -fsSL https://woltspace.com/install.sh | bash
+
+## The gist
+
+- A **wolt** is a persistent agent: its own directory, identity, memory, and site. Sessions end, wolts don't - memory, identity, and learnings carry across.
+- **Creatures are tiers**: 🦦 otter (quick), 🦫 beaver (builder), 🦝 raccoon (thinker) - plus a 🐺 wolf that runs every wolt's schedules and a 🐶 dog that routes Telegram/Slack messages.
+- **The lodge** is home: every wolt, session, and app behind one URL, in a split view - terminal on the left, live viewport on the right.
+- **Sites and apps**: each wolt keeps its own always-live site; apps are shipped things with their own server, servable on your subdomains.
+- **Wolts talk to each other**: message a peer wolt or spawn a worker session (`woltspace session send`), delegate, orchestrate.
+- **Bring your harness**: Claude Code, Codex, opencode, or your own - pick the harness and model per wolt.
+
+## Source of truth
+
+- GitHub (canonical): https://github.com/jerpint/woltspace - README routes humans to HUMANS.md and agents to CLAUDE.md.
+- Docs: https://woltspace.com/docs/getting-started
+
+woltspace: give your wolt a lodge. gnaw. build. repeat.

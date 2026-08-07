@@ -1,0 +1,84 @@
+/* woltspace theme for Starlight — palette + fonts from the landing page design system. */
+@import url('https://fonts.googleapis.com/css2?family=Preahvihear&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap');
+
+:root {
+  --sl-font: 'DM Sans', sans-serif;
+  --sl-font-mono: 'JetBrains Mono', monospace;
+  --ws-font-display: 'Preahvihear', sans-serif;
+}
+
+/* Light — the woltspace cream/terra look (default). */
+:root[data-theme='light'] {
+  --sl-color-white: #18100A;
+  --sl-color-gray-1: #2c2118;
+  --sl-color-gray-2: #5C4D3C;
+  --sl-color-gray-3: #9A8878;
+  --sl-color-gray-4: #C4B89E;
+  --sl-color-gray-5: #D6CCBA;
+  --sl-color-gray-6: #F5F1E8;
+  --sl-color-gray-7: #FAF7F0;
+  --sl-color-black: #EDE8DE;
+  --sl-color-accent-low: #F0D5C8;
+  --sl-color-accent: #C4531E;
+  --sl-color-accent-high: #8a3a15;
+}
+
+/* Dark — same forest warmth, dimmed. */
+:root[data-theme='dark'] {
+  --sl-color-white: #F5EFE4;
+  --sl-color-gray-1: #e8dfd0;
+  --sl-color-gray-2: #c2b39e;
+  --sl-color-gray-3: #8a7660;
+  --sl-color-gray-4: #5c4a38;
+  --sl-color-gray-5: #3a2d20;
+  --sl-color-gray-6: #2a2016;
+  --sl-color-black: #1d150e;
+  --sl-color-accent-low: #3b1f10;
+  --sl-color-accent: #d96a31;
+  --sl-color-accent-high: #f0c4a8;
+}
+
+/* Landing-page aliases: one palette, both themes. The landing's CSS consumes
+   these, so it follows the Starlight theme toggle automatically. */
+:root {
+  --bg: var(--sl-color-black);
+  --surface: var(--sl-color-gray-6);
+  --surface-2: var(--sl-color-gray-7);
+  --border: var(--sl-color-gray-5);
+  --border-2: var(--sl-color-gray-4);
+  --ink: var(--sl-color-white);
+  --ink-2: var(--sl-color-gray-2);
+  --ink-3: var(--sl-color-gray-3);
+  --terra: var(--sl-color-accent);
+  --terra-light: var(--sl-color-accent-low);
+  --font-display: var(--ws-font-display);
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+:root[data-theme='light'] {
+  --amber: #C98B2A;
+  --amber-light: #F2E4C0;
+  --green: #3A6644;
+}
+:root[data-theme='dark'] {
+  --amber: #d9a44e;
+  --amber-light: #3a2c12;
+  --green: #6fa07c;
+}
+
+/* Display font where the lodge uses it: site title + page titles. */
+.site-title {
+  font-family: var(--ws-font-display);
+  font-weight: 300;
+}
+.sl-markdown-content h1,
+h1[data-page-title] {
+  font-family: var(--ws-font-display);
+  font-weight: 300;
+  letter-spacing: -0.01em;
+}
+
+/* Mono micro-labels, like the lodge's section tags. */
+.sl-markdown-content h2 {
+  font-weight: 600;
+}
