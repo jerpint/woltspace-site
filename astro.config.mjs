@@ -13,6 +13,9 @@ export default defineConfig({
       description: 'a place for builders to build',
       favicon: '/favicon.svg',
       customCss: ['./src/styles/woltspace.css'],
+      components: {
+        Header: './src/components/Header.astro',
+      },
       social: [
         { icon: 'github', label: 'GitHub', href: 'https://github.com/jerpint/woltspace' },
       ],

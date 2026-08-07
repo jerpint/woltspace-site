@@ -1,0 +1,66 @@
+---
+// Header override: Starlight's default composition plus an always-visible Docs link,
+// so the docs are one tap away from every page - including the landing, which has no sidebar.
+import SiteTitle from '@astrojs/starlight/components/SiteTitle.astro';
+import Search from '@astrojs/starlight/components/Search.astro';
+import SocialIcons from '@astrojs/starlight/components/SocialIcons.astro';
+import ThemeSelect from '@astrojs/starlight/components/ThemeSelect.astro';
+---
+<div class="header">
+  <div class="title-wrapper sl-flex">
+    <SiteTitle />
+  </div>
+  <div class="sl-flex search-wrapper">
+    <Search />
+  </div>
+  <div class="sl-flex right-group">
+    <a class="ws-docs-link" href="/docs/getting-started/">Docs</a>
+    <div class="sl-hidden md:sl-flex social-icons"><SocialIcons /></div>
+    <div class="sl-hidden md:sl-flex"><ThemeSelect /></div>
+  </div>
+</div>
+
+<style>
+  .header {
+    display: flex;
+    gap: var(--sl-nav-gap, 1rem);
+    align-items: center;
+    height: 100%;
+  }
+  .title-wrapper {
+    overflow: clip;
+    padding: 0.25rem;
+    margin: -0.25rem;
+    min-width: 0;
+  }
+  .search-wrapper {
+    flex: 1;
+    justify-content: center;
+  }
+  .right-group {
+    gap: 1rem;
+    align-items: center;
+  }
+  .social-icons {
+    gap: 0.75rem;
+    align-items: center;
+  }
+  .ws-docs-link {
+    font-family: var(--sl-font-mono, monospace);
+    font-size: var(--sl-text-xs);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--sl-color-gray-2);
+    text-decoration: none;
+    padding: 0.4rem 0.75rem;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 6px;
+    background: var(--sl-color-gray-7);
+    white-space: nowrap;
+  }
+  .ws-docs-link:hover {
+    color: var(--sl-color-accent);
+    border-color: var(--sl-color-accent);
+  }
+</style>
