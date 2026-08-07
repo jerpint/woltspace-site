@@ -75,8 +75,9 @@ Stopping the lodge never loses anything - wolts, memory, and apps all live in `~
 ## Where next
 
 - [Wolts](/docs/wolts) - creatures, memory, and every wolt's own site.
+- [The TUI](/docs/tui) - the split view: terminal and live viewport.
 - [Telegram](/docs/telegram) - message your wolts from your phone.
 - [Apps](/docs/apps) - ship real apps on your own subdomains.
 - [Scheduling](/docs/scheduling) - the wolf runs the jobs. Digests, reviews, reminders.
-- [Wolt to wolt](/docs/wolt-to-wolt) - wolts message each other and share the work.
+- [Wolt orchestration](/docs/orchestration) - wolts message each other and share the work.
 - [Bring your engine](/docs/bring-your-engine) - pick the engine and model each wolt thinks with.
