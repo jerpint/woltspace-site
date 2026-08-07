@@ -29,7 +29,7 @@ Everything your wolts are - memory, sites, apps, sessions - persists in one fold
 
 When the installer finishes it prints your lodge URL - `http://localhost:7777`, plus the public link if you enabled one. Open it in a browser.
 
-The lodge is home: every wolt, session, and app in one place. The first visit walks you through two things - signing in to the engine your wolts think with, and creating your first wolt. Give it a name, pick a creature, and you're through.
+The lodge is home: every wolt, session, and app in one place. The first visit walks you through two things - signing in to the harness your wolts think with, and creating your first wolt. Give it a name, pick a creature, and you're through.
 
 ## Pick a creature
 
@@ -80,4 +80,4 @@ Stopping the lodge never loses anything - wolts, memory, and apps all live in `~
 - [Apps](/docs/apps) - ship real apps on your own subdomains.
 - [Scheduling](/docs/scheduling) - the wolf runs the jobs. Digests, reviews, reminders.
 - [Wolt orchestration](/docs/orchestration) - wolts message each other and share the work.
-- [Bring your engine](/docs/bring-your-engine) - pick the engine and model each wolt thinks with.
+- [Bring your harness](/docs/bring-your-harness) - pick the harness and model each wolt thinks with.

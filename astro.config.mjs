@@ -34,7 +34,7 @@ export default defineConfig({
             { label: 'External access', slug: 'docs/external-access' },
             { label: 'Scheduling', slug: 'docs/scheduling' },
             { label: 'Wolt orchestration', slug: 'docs/orchestration' },
-            { label: 'Bring your engine', slug: 'docs/bring-your-engine' },
+            { label: 'Bring your harness', slug: 'docs/bring-your-harness' },
           ],
         },
       ],
