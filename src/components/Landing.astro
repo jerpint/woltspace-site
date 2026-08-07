@@ -727,3 +727,71 @@ function renderCloud(map,px){var cols=Math.max.apply(null,map.map(function(r){re
 })();
 
 </script>
+
+<script is:inline>
+
+// iPhone story carousel
+(function(){
+  const track = document.getElementById('is-track');
+  if (!track) return;
+  const slides = [...track.querySelectorAll('.is-slide')];
+  const dotsEl = document.getElementById('is-dots');
+  const prev = document.querySelector('.iphone-story .is-nav.is-prev');
+  const next = document.querySelector('.iphone-story .is-nav.is-next');
+
+  slides.forEach((_, i) => {
+    const b = document.createElement('button');
+    b.className = 'is-dot' + (i === 0 ? ' is-active' : '');
+    b.setAttribute('aria-label', 'go to slide ' + (i+1));
+    b.addEventListener('click', () => scrollTo(i));
+    dotsEl.appendChild(b);
+  });
+
+  function activeIndex(){
+    const center = track.scrollLeft + track.clientWidth / 2;
+    let best = 0, bestD = Infinity;
+    slides.forEach((s, i) => {
+      const c = s.offsetLeft + s.offsetWidth / 2;
+      const d = Math.abs(center - c);
+      if (d < bestD) { bestD = d; best = i; }
+    });
+    return best;
+  }
+  function scrollTo(i){
+    const s = slides[i]; if (!s) return;
+    const target = s.offsetLeft - (track.clientWidth - s.offsetWidth) / 2;
+    track.scrollTo({ left: target, behavior: 'smooth' });
+  }
+  function syncDots(){
+    const i = activeIndex();
+    [...dotsEl.children].forEach((d, k) => d.classList.toggle('is-active', k === i));
+  }
+  function syncPlayback(){
+    const active = activeIndex();
+    slides.forEach((s, i) => {
+      const v = s.querySelector('video'); if (!v) return;
+      if (i === active) { v.play().catch(() => {}); }
+      else { v.pause(); v.currentTime = 0; }
+    });
+  }
+
+  track.addEventListener('scroll', () => requestAnimationFrame(() => { syncDots(); syncPlayback(); }));
+  prev.addEventListener('click', () => scrollTo(Math.max(0, activeIndex() - 1)));
+  next.addEventListener('click', () => scrollTo(Math.min(slides.length - 1, activeIndex() + 1)));
+
+  slides.forEach(slide => {
+    const v = slide.querySelector('video');
+    const overlay = slide.querySelector('.is-play-overlay');
+    if (!v || !overlay) return;
+    overlay.addEventListener('click', (e) => {
+      e.stopPropagation();
+      v.play().then(() => overlay.classList.add('is-hidden')).catch(() => {});
+    });
+    v.addEventListener('pause', () => overlay.classList.remove('is-hidden'));
+    v.addEventListener('play', () => overlay.classList.add('is-hidden'));
+  });
+
+  requestAnimationFrame(() => { scrollTo(0); syncPlayback(); });
+})();
+
+</script>
