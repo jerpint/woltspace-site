@@ -147,3 +147,4 @@ main:has(.ws-landing) .content-panel{padding:0;border-top:none}
 .ws-landing summary::before{display:none}
 main:has(.ws-landing) footer.sl-flex{display:none}
 
+.ws-landing .ws-brand-word{font-family:var(--font-display);font-size:0.95em;color:var(--ink)}
