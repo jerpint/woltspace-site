@@ -1,16 +1,17 @@
 #!/bin/bash
 # woltspace installer - a lodge for your wolts
 #
-#   curl -fsSL https://woltspace.com/install.sh | bash            # native (default)
-#   curl -fsSL https://woltspace.com/install.sh | bash -s -- --docker
+#   curl -fsSL https://woltspace.com/install.sh | bash              # container (default)
+#   curl -fsSL https://woltspace.com/install.sh | bash -s -- --native  # developers
 #
-# Native installs the two published packages and runs the doctor. Nothing is
-# cloned, nothing is built. --docker keeps the container path: it clones the
-# repo and hands off to its launcher, which builds the slim image from the
-# same two packages.
+# The default needs only Docker Desktop on the host: everything else lives in
+# the image. Today that path clones the repo and builds the slim image from the
+# two published packages; once the image itself is published it becomes a pull.
+# --native is the developer install: uv, node >= 18, tmux and a harness CLI on
+# the host, the two published packages installed directly.
 set -euo pipefail
 
-MODE=native
+MODE=docker
 for arg in "$@"; do
   case "$arg" in
     --docker) MODE=docker ;;
