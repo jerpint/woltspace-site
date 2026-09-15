@@ -3,7 +3,7 @@ title: Getting started
 description: Install woltspace, open the lodge, and meet your first wolt.
 ---
 
-Install Woltspace, open the lodge, and meet your first wolt. macOS is the primary path; Windows also works through WSL, though that setup is still a work in progress.
+Install Woltspace, open the lodge, and meet your first wolt. It runs natively on macOS and Linux. Windows also works through WSL, though that setup is still a work in progress.
 
 ## The easy way
 
@@ -15,7 +15,7 @@ Install Woltspace on this computer. Follow https://woltspace.com/install-with-ai
 
 Your coding agent will check your Mac, explain any prerequisites, install Woltspace, run its diagnostics, and open the lodge. It will ask before making privileged or system-wide changes.
 
-This requires Claude Code or Codex with terminal access to your computer. An ordinary web chat cannot install software for you. On Windows, the coding agent will set Woltspace up inside WSL rather than directly in PowerShell.
+This requires Claude Code or Codex with terminal access to your computer. An ordinary web chat cannot install software for you. macOS and Linux install natively; on Windows, the coding agent will set Woltspace up inside WSL rather than directly in PowerShell.
 
 ## For developers
 
