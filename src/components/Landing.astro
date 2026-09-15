@@ -80,6 +80,13 @@ import '../styles/landing.css';
             <code><span class="prompt">$</span>uv tool install 'woltspace[connectors]'<br /><span class="prompt">$</span>woltspace start</code>
             <button class="copy-btn" onclick="copyText(`uv tool install 'woltspace[connectors]' &amp;&amp; woltspace start`, 'copy-uv-label')" aria-label="Copy uv install and start commands"><span id="copy-uv-label" aria-live="polite">Copy</span></button>
           </div>
+          <div class="install-subcommand">
+            <p class="install-note">Optional: install and open the terminal UI.</p>
+            <div class="install-cmd">
+              <code><span class="prompt">$</span>npm install -g @woltspace/tui@latest<br /><span class="prompt">$</span>woltspace tui</code>
+              <button class="copy-btn" onclick="copyText('npm install -g @woltspace/tui@latest &amp;&amp; woltspace tui', 'copy-tui-label')" aria-label="Copy optional TUI install and open commands"><span id="copy-tui-label" aria-live="polite">Copy</span></button>
+            </div>
+          </div>
         </div>
       </div>
 

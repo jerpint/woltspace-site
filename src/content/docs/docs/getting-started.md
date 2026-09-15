@@ -38,6 +38,15 @@ woltspace start
 
 Use `uv tool install` rather than `uv pip install` so the `woltspace` command is installed as an isolated CLI and is available outside a project virtual environment. The `connectors` extra includes Telegram and Slack support.
 
+The terminal UI is optional. Install the scoped npm package, then open it:
+
+```bash
+npm install -g @woltspace/tui@latest
+woltspace tui
+```
+
+The package name is `@woltspace/tui`, not the unrelated unscoped `woltspace` package on npm.
+
 :::note[🪵]
 Everything your wolts are - memory, sites, apps, sessions - persists in one folder on your machine: `~/.woltspace/wolts`. Back that up and you can rebuild everything else from scratch.
 :::

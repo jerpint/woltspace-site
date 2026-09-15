@@ -11,6 +11,11 @@ If uv, Node.js, tmux, and a supported coding-agent harness are already installed
     uv tool install 'woltspace[connectors]'
     woltspace start
 
+Optional terminal UI (the npm package is scoped):
+
+    npm install -g @woltspace/tui@latest
+    woltspace tui
+
 If the human asks you to install Woltspace on a Mac, follow:
 
     https://woltspace.com/install-with-ai.txt
