@@ -73,6 +73,14 @@ import '../styles/landing.css';
           <button class="copy-btn" onclick="copyText('curl -fsSL https://woltspace.com/install.sh | bash -s -- --native', 'copy-dev-label')" aria-label="Copy install command"><span id="copy-dev-label" aria-live="polite">Copy</span></button>
         </div>
         <p class="install-note">On Windows, run this command inside WSL.</p>
+        <div class="install-alternative">
+          <h5>Already have the dependencies?</h5>
+          <p class="install-copy">Install the CLI directly with uv, then start the lodge.</p>
+          <div class="install-cmd">
+            <code><span class="prompt">$</span>uv tool install 'woltspace[connectors]'<br /><span class="prompt">$</span>woltspace start</code>
+            <button class="copy-btn" onclick="copyText(`uv tool install 'woltspace[connectors]' &amp;&amp; woltspace start`, 'copy-uv-label')" aria-label="Copy uv install and start commands"><span id="copy-uv-label" aria-live="polite">Copy</span></button>
+          </div>
+        </div>
       </div>
 
       <div class="install-next">

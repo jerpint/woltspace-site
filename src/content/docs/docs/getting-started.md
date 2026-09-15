@@ -29,6 +29,15 @@ The native installer checks for `uv`, Node 18+, `tmux`, and a supported coding-a
 
 On Windows, run the command inside WSL. The WSL path is usable today but less polished than macOS.
 
+If you already have the native dependencies, install the Woltspace CLI directly with `uv` and start the lodge:
+
+```bash
+uv tool install 'woltspace[connectors]'
+woltspace start
+```
+
+Use `uv tool install` rather than `uv pip install` so the `woltspace` command is installed as an isolated CLI and is available outside a project virtual environment. The `connectors` extra includes Telegram and Slack support.
+
 :::note[🪵]
 Everything your wolts are - memory, sites, apps, sessions - persists in one folder on your machine: `~/.woltspace/wolts`. Back that up and you can rebuild everything else from scratch.
 :::

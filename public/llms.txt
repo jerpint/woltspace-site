@@ -6,6 +6,11 @@ Install natively:
 
     curl -fsSL https://woltspace.com/install.sh | bash -s -- --native
 
+If uv, Node.js, tmux, and a supported coding-agent harness are already installed:
+
+    uv tool install 'woltspace[connectors]'
+    woltspace start
+
 If the human asks you to install Woltspace on a Mac, follow:
 
     https://woltspace.com/install-with-ai.txt
