@@ -29,74 +29,35 @@ import '../styles/landing.css';
     <p class="brand-tagline">gnaw. build. repeat.</p>
   </header>
 <section style="margin-top:0;margin-bottom:48px">
-    <h2 class="intro-headline"><span class="ws-brand-word">woltspace</span> is the <span class="intro-kw">scaffold</span> for your harnesses.</h2>
-    <p class="intro-body">Claude Code, Codex, opencode - the harness has become another layer of the stack. The scaffold is what's missing: where your <s style="text-decoration-color:var(--ink-3);text-decoration-thickness:1.5px">coding agents</s> wolts live, persist, and pick up where you left off.</p>
+    <h2 class="intro-headline">Give your coding agents a place to <span class="intro-kw">live.</span></h2>
+    <p class="intro-body">Wolts are coding agents with a home, a memory, and room to build. Sessions end; they pick up where you left off.</p>
   </section>
 
   <div class="install-card">
-  <div class="install-block" style="margin:0;animation:none">
-    <div class="install-label">Run this in your terminal to get started</div>
-    <div class="install-cmd">
-      <code><span class="prompt">$</span>curl -fsSL https://woltspace.com/install.sh | bash</code>
-      <button class="copy-btn" onclick="copyInstall()"><span id="copy-label">Copy</span></button>
-    </div>
-
-    <details class="prereq">
-      <summary class="prereq-summary">
-        <span class="prereq-summary-icon">🐳</span>
-        <span class="prereq-summary-text"><strong>New to all this?</strong> How to install Docker and open a terminal</span>
-        <span class="prereq-summary-caret">▼</span>
-      </summary>
-      <div class="prereq-detail">
-        <div class="prereq-steps">
-          <div class="prereq-step">
-            <div class="prereq-step-num">1</div>
-            <div class="prereq-step-text"><strong>Download Docker Desktop</strong>: free, works on Mac, Windows, and Linux. <a href="https://www.docker.com/products/docker-desktop/" target="_blank" rel="noopener" style="color:var(--terra);border-bottom:1px solid rgba(196,83,30,0.35);text-decoration:none">Get it here →</a></div>
-          </div>
-          <div class="prereq-step">
-            <div class="prereq-step-num">2</div>
-            <div class="prereq-step-text"><strong>Install and open it.</strong> A small whale icon will appear in your menu bar. That means it's running.</div>
-          </div>
-          <div class="prereq-step">
-            <div class="prereq-step-num">3</div>
-            <div class="prereq-step-text"><strong>Open your terminal.</strong>
-              <div class="terminal-os-tabs" style="margin-top:10px">
-                <button class="terminal-os-tab" data-os="mac" onclick="switchOS('mac')">Mac</button>
-                <button class="terminal-os-tab" data-os="win" onclick="switchOS('win')">Windows</button>
-                <button class="terminal-os-tab" data-os="linux" onclick="switchOS('linux')">Linux</button>
-              </div>
-              <div class="terminal-os-panel" id="os-mac" style="margin-top:8px">
-                <div class="terminal-shortcut">
-                  <div class="terminal-shortcut-keys"><span class="kbd">⌘</span><span style="color:var(--ink-3);font-size:11px">+</span><span class="kbd">Space</span></div>
-                  <div class="terminal-shortcut-desc">Open Spotlight, type <strong>Terminal</strong>, press Enter. Or find it in Applications → Utilities → Terminal.</div>
-                </div>
-              </div>
-              <div class="terminal-os-panel" id="os-win" style="margin-top:8px">
-                <div class="terminal-shortcut">
-                  <div class="terminal-shortcut-keys"><span class="kbd">Win</span><span style="color:var(--ink-3);font-size:11px">+</span><span class="kbd">R</span></div>
-                  <div class="terminal-shortcut-desc">Type <strong>powershell</strong> and press Enter. Or search "PowerShell" in the Start menu. Note: you may need to install <a href="https://docs.microsoft.com/windows/wsl/" target="_blank" rel="noopener" style="color:var(--terra)">WSL</a> first for this command to work on Windows.</div>
-                </div>
-              </div>
-              <div class="terminal-os-panel" id="os-linux" style="margin-top:8px">
-                <div class="terminal-shortcut">
-                  <div class="terminal-shortcut-keys"><span class="kbd">Ctrl</span><span style="color:var(--ink-3);font-size:11px">+</span><span class="kbd">Alt</span><span style="color:var(--ink-3);font-size:11px">+</span><span class="kbd">T</span></div>
-                  <div class="terminal-shortcut-desc">Opens a terminal on most Linux desktops. Or right-click the desktop and look for "Open Terminal".</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="prereq-step">
-            <div class="prereq-step-num">4</div>
-            <div class="prereq-step-text"><strong>Run the command above in your terminal.</strong> That's it.</div>
-          </div>
-        </div>
+    <div class="install-block" style="margin:0;animation:none">
+      <div class="install-label">The easy way</div>
+      <h3 class="install-heading">Have Claude Code or Codex?</h3>
+      <p class="install-copy">Paste this prompt in and let your coding agent install Woltspace for you.</p>
+      <div class="install-cmd ai-prompt">
+        <code>Install Woltspace on this Mac. Follow https://woltspace.com/install-with-ai.txt</code>
+        <button class="copy-btn" onclick="copyText('Install Woltspace on this Mac. Follow https://woltspace.com/install-with-ai.txt', 'copy-ai-label')" aria-label="Copy prompt"><span id="copy-ai-label">Copy prompt</span></button>
       </div>
-    </details>
-    <div class="install-next">
-      <a class="docs-cta" href="/docs/getting-started/">Read the docs →</a>
-      <p class="github-line" style="margin:0">View source on <a class="github-link" href="https://github.com/jerpint/woltspace">GitHub</a></p>
+      <p class="install-note">Requires Claude Code or Codex with access to your Mac.</p>
+
+      <div class="install-or"><span>or</span></div>
+
+      <div class="install-label">For developers</div>
+      <p class="install-copy">Install directly from your terminal.</p>
+      <div class="install-cmd">
+        <code><span class="prompt">$</span>curl -fsSL https://woltspace.com/install.sh | bash -s -- --native</code>
+        <button class="copy-btn" onclick="copyText('curl -fsSL https://woltspace.com/install.sh | bash -s -- --native', 'copy-dev-label')" aria-label="Copy command"><span id="copy-dev-label">Copy</span></button>
+      </div>
+
+      <div class="install-next">
+        <a class="docs-cta" href="/docs/getting-started/">Read the docs →</a>
+        <p class="github-line" style="margin:0">View source on <a class="github-link" href="https://github.com/jerpint/woltspace">GitHub</a></p>
+      </div>
     </div>
-  </div>
   </div>
   <div class="section-divider"></div>
 
@@ -149,13 +110,13 @@ import '../styles/landing.css';
 <footer><p>🦫 woltspace: give your wolt a lodge.</p></footer>
 </div>
 <script is:inline>
-function copyInstall(){
-  var cmd='curl -fsSL https://woltspace.com/install.sh | bash';
-  var label=document.getElementById('copy-label');
-  function onSuccess(){label.textContent='✓ Copied';setTimeout(function(){label.textContent='Copy'},2000);}
+function copyText(value, labelId){
+  var label=document.getElementById(labelId);
+  var originalLabel=label.textContent;
+  function onSuccess(){label.textContent='✓ Copied';setTimeout(function(){label.textContent=originalLabel},2000);}
   function onFail(){
     var ta=document.createElement('textarea');
-    ta.value=cmd;
+    ta.value=value;
     ta.style.cssText='position:fixed;top:0;left:0;opacity:0;pointer-events:none';
     document.body.appendChild(ta);
     ta.focus();ta.select();
@@ -163,26 +124,10 @@ function copyInstall(){
     document.body.removeChild(ta);
   }
   if(navigator.clipboard&&navigator.clipboard.writeText){
-    navigator.clipboard.writeText(cmd).then(onSuccess,onFail);
+    navigator.clipboard.writeText(value).then(onSuccess,onFail);
   } else {
     onFail();
   }
-}
-
-// Detect platform and activate the right OS tab
-(function(){
-  var ua=navigator.userAgent;
-  var os=ua.indexOf('Mac')>-1?'mac':ua.indexOf('Win')>-1?'win':'linux';
-  switchOS(os);
-})();
-
-function switchOS(os){
-  document.querySelectorAll('.terminal-os-tab').forEach(function(t){
-    t.classList.toggle('active', t.dataset.os===os);
-  });
-  document.querySelectorAll('.terminal-os-panel').forEach(function(p){
-    p.classList.toggle('active', p.id==='os-'+os);
-  });
 }
 
 // 🦫 console easter egg

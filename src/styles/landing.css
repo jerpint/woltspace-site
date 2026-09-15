@@ -30,14 +30,20 @@ main:has(.ws-landing) .content-panel{padding:0;border-top:none}
 .ws-landing .brand-tagline{font-family:var(--font-mono);font-size:12px;color:var(--ink-3);letter-spacing:0.1em;text-transform:uppercase}
 .ws-landing .install-block{margin:32px 0 0;animation:fadeUp 0.7s ease 0.15s both}
 .ws-landing .install-label{font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
+.ws-landing .install-heading{font-family:var(--font-display);font-size:25px;font-weight:400;line-height:1.2;color:var(--ink);margin:0 0 8px}
+.sl-markdown-content .ws-landing p.install-copy{font-size:14px;color:var(--ink-2);margin:0 0 14px}
+.sl-markdown-content .ws-landing p.install-note{font-family:var(--font-mono);font-size:11px;color:var(--ink-3);margin:10px 0 0}
 .ws-landing .install-cmd{display:flex;align-items:stretch;background:var(--ws-terminal);border-radius:8px;overflow:hidden;box-shadow:0 4px 24px rgba(24,16,10,0.18)}
 .ws-landing .install-cmd code{font-family:var(--font-mono);font-size:13px;color:rgba(255,255,255,0.85);padding:14px 18px;flex:1;overflow-x:auto;white-space:nowrap;display:block}
+.ws-landing .install-cmd.ai-prompt code{white-space:normal;line-height:1.55;color:#fff}
 .ws-landing .prompt{color:rgba(255,255,255,0.3);margin-right:6px;user-select:none}
 .ws-landing .copy-btn{flex-shrink:0;background:var(--terra);border:none;color:#fff;font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:0 20px;cursor:pointer;transition:background 0.15s;border-left:1px solid rgba(255,255,255,0.1)}
 .ws-landing .copy-btn:hover{background:#B44419}
 .ws-landing .github-line{margin-top:14px;font-family:var(--font-mono);font-size:11px;color:var(--ink-3)}
 .ws-landing .github-link{color:var(--ink-3);text-decoration:none;border-bottom:1px solid var(--border-2);transition:color 0.12s}
 .ws-landing .github-link:hover{color:var(--terra);border-color:var(--terra)}
+.ws-landing .install-or{display:flex;align-items:center;gap:12px;margin:24px 0;color:var(--ink-3);font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:0.14em}
+.ws-landing .install-or::before,.ws-landing .install-or::after{content:'';height:1px;flex:1;background:var(--border)}
 /* Docker prereq block */
 .ws-landing .prereq{border-top:1px solid var(--border);padding-top:14px;margin-top:14px}
 .ws-landing .prereq-summary{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-3);cursor:pointer;list-style:none;user-select:none}
@@ -128,7 +134,7 @@ main:has(.ws-landing) .content-panel{padding:0;border-top:none}
 .ws-landing .raccoon-sprite{bottom:10px;right:14px;transform:scale(0.5);transform-origin:bottom right}
 .ws-landing .otter-sprite{position:absolute;bottom:6px;transform:scale(0.5);transform-origin:bottom left;animation:otterZip 4s linear infinite}
 @keyframes otterZip{0%{left:-20px;opacity:0}10%{opacity:1}90%{opacity:1}100%{left:calc(100% + 20px);opacity:0}}
-@media(max-width:540px){.ws-landing .brand-name{font-size:32px}.ws-landing .principles-grid{grid-template-columns:1fr}.ws-landing .install-cmd code{font-size:11px}.ws-landing .split-body{height:220px}.ws-landing .term-line{font-size:9px;line-height:1.5}.ws-landing .split-terminal{padding:10px}.ws-landing .vp-header{font-size:13px}.ws-landing .vp-card{padding:7px 9px;font-size:9px;margin-bottom:4px}.ws-landing .vp-badge{font-size:8px}.ws-landing .vp-page{padding:10px}.ws-landing .critter svg{transform:scale(0.8);transform-origin:bottom left}.ws-landing .raccoon-sprite{right:6px}.ws-landing .beaver-sprite{left:6px;bottom:4px}}
+@media(max-width:540px){.ws-landing .brand-name{font-size:32px}.ws-landing .principles-grid{grid-template-columns:1fr}.ws-landing .install-card{padding:22px 18px}.ws-landing .install-cmd{flex-direction:column}.ws-landing .install-cmd code{font-size:11px}.ws-landing .copy-btn{padding:11px 16px;border-left:0;border-top:1px solid rgba(255,255,255,0.1)}.ws-landing .split-body{height:220px}.ws-landing .term-line{font-size:9px;line-height:1.5}.ws-landing .split-terminal{padding:10px}.ws-landing .vp-header{font-size:13px}.ws-landing .vp-card{padding:7px 9px;font-size:9px;margin-bottom:4px}.ws-landing .vp-badge{font-size:8px}.ws-landing .vp-page{padding:10px}.ws-landing .critter svg{transform:scale(0.8);transform-origin:bottom left}.ws-landing .raccoon-sprite{right:6px}.ws-landing .beaver-sprite{left:6px;bottom:4px}}
 
 
 
@@ -137,6 +143,7 @@ main:has(.ws-landing) .content-panel{padding:0;border-top:none}
 :root{--ws-terminal:#18100A}
 /* Starlight gives inline code a background + padding; the install command is a terminal, not inline code */
 .sl-markdown-content .install-cmd code{background:none;border:0;margin:0;padding:14px 18px;color:rgba(255,255,255,0.85);font-size:13px;white-space:nowrap;overflow-x:auto;display:block;flex:1}
+.sl-markdown-content .install-cmd.ai-prompt code{white-space:normal}
 .sl-markdown-content .install-cmd .prompt{color:rgba(255,255,255,0.3)}
 /* Starlight styles <details> with a chevron + inset border; the Docker prereq has its own */
 .ws-landing details{border:0;padding:0;margin:0}
