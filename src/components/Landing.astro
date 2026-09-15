@@ -36,9 +36,9 @@ import '../styles/landing.css';
   <div class="install-card" data-install-picker>
     <div class="install-block" style="margin:0;animation:none">
       <div class="install-picker-intro">
-        <div class="install-label">Install on your Mac</div>
+        <div class="install-label">Install on your computer</div>
         <h3 class="install-heading">Choose what feels familiar.</h3>
-        <p class="install-copy">Both paths install the same native Woltspace.</p>
+        <p class="install-copy">Native on macOS. Windows works through WSL.</p>
       </div>
 
       <div class="install-tabs" role="tablist" aria-label="Installation method">
@@ -59,10 +59,10 @@ import '../styles/landing.css';
         </div>
         <p class="install-copy">Paste this into Claude Code or Codex. It will check your Mac, explain each step, and open the lodge.</p>
         <div class="install-cmd ai-prompt">
-          <code>Install Woltspace on this Mac. Follow https://woltspace.com/install-with-ai.txt</code>
-          <button class="copy-btn" onclick="copyText('Install Woltspace on this Mac. Follow https://woltspace.com/install-with-ai.txt', 'copy-ai-label')" aria-label="Copy install prompt"><span id="copy-ai-label" aria-live="polite">Copy</span></button>
+          <code>Install Woltspace on this computer. Follow https://woltspace.com/install-with-ai.txt</code>
+          <button class="copy-btn" onclick="copyText('Install Woltspace on this computer. Follow https://woltspace.com/install-with-ai.txt', 'copy-ai-label')" aria-label="Copy install prompt"><span id="copy-ai-label" aria-live="polite">Copy</span></button>
         </div>
-        <p class="install-note">Requires Claude Code or Codex with access to your Mac.</p>
+        <p class="install-note">Requires Claude Code or Codex with terminal access. Windows setup uses WSL and is still a work in progress.</p>
       </div>
 
       <div class="install-panel" role="tabpanel" id="install-panel-terminal" aria-labelledby="install-tab-terminal" hidden>
@@ -72,6 +72,7 @@ import '../styles/landing.css';
           <code><span class="prompt">$</span>curl -fsSL https://woltspace.com/install.sh | bash -s -- --native</code>
           <button class="copy-btn" onclick="copyText('curl -fsSL https://woltspace.com/install.sh | bash -s -- --native', 'copy-dev-label')" aria-label="Copy install command"><span id="copy-dev-label" aria-live="polite">Copy</span></button>
         </div>
+        <p class="install-note">On Windows, run this command inside WSL.</p>
       </div>
 
       <div class="install-next">

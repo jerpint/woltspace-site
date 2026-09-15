@@ -1,21 +1,21 @@
 ---
 title: Getting started
-description: Install woltspace on your Mac, open the lodge, and meet your first wolt.
+description: Install woltspace, open the lodge, and meet your first wolt.
 ---
 
-Install Woltspace on your Mac, open the lodge, and meet your first wolt.
+Install Woltspace, open the lodge, and meet your first wolt. macOS is the primary path; Windows also works through WSL, though that setup is still a work in progress.
 
 ## The easy way
 
 If you already use Claude Code or Codex, paste this into it:
 
 ```text
-Install Woltspace on this Mac. Follow https://woltspace.com/install-with-ai.txt
+Install Woltspace on this computer. Follow https://woltspace.com/install-with-ai.txt
 ```
 
 Your coding agent will check your Mac, explain any prerequisites, install Woltspace, run its diagnostics, and open the lodge. It will ask before making privileged or system-wide changes.
 
-This requires Claude Code or Codex with terminal access to your Mac. An ordinary web chat cannot install software on your computer.
+This requires Claude Code or Codex with terminal access to your computer. An ordinary web chat cannot install software for you. On Windows, the coding agent will set Woltspace up inside WSL rather than directly in PowerShell.
 
 ## For developers
 
@@ -26,6 +26,8 @@ curl -fsSL https://woltspace.com/install.sh | bash -s -- --native
 ```
 
 The native installer checks for `uv`, Node 18+, `tmux`, and a supported coding-agent harness, then installs the Woltspace control plane and TUI. Run `woltspace doctor` if you need to inspect the setup.
+
+On Windows, run the command inside WSL. The WSL path is usable today but less polished than macOS.
 
 :::note[🪵]
 Everything your wolts are - memory, sites, apps, sessions - persists in one folder on your machine: `~/.woltspace/wolts`. Back that up and you can rebuild everything else from scratch.
