@@ -14,6 +14,16 @@ You are helping the user install Woltspace natively on macOS or Linux, or inside
 - Never expose tokens, credentials, or private configuration in chat output.
 - Preserve an existing Woltspace installation and its data. Do not overwrite or delete `~/.woltspace/wolts`.
 
+## 0. Explain and confirm
+
+Before running any commands, briefly explain Woltspace in plain language:
+
+- Woltspace gives coding agents persistent homes, memory, and space to build, so they can pick up across sessions.
+- It runs on the user's computer, uses a supported coding-agent harness, and keeps its durable data under `~/.woltspace/wolts`.
+- The native setup installs a local control plane and terminal interface plus any missing prerequisites. On Windows, it runs inside WSL2.
+
+Keep this explanation to two or three sentences. Then ask: **“Would you like me to continue with the install?”** Wait for a clear yes before inspecting the system, installing prerequisites, or running the installer.
+
 ## 1. Inspect
 
 Check, without changing anything:
