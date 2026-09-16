@@ -67,8 +67,9 @@ import '../styles/landing.css';
 
       <div class="install-panel" role="tabpanel" id="install-panel-terminal" aria-labelledby="install-tab-terminal" hidden>
         <div class="dev-tabs" role="tablist" aria-label="Developer installation method">
-          <button type="button" role="tab" id="dev-tab-setup" aria-selected="true" aria-controls="dev-panel-setup" tabindex="0">Setup script</button>
-          <button type="button" role="tab" id="dev-tab-package" aria-selected="false" aria-controls="dev-panel-package" tabindex="-1">Have dependencies</button>
+          <span class="dev-tabs-label">install</span>
+          <button type="button" role="tab" id="dev-tab-setup" aria-selected="true" aria-controls="dev-panel-setup" tabindex="0">One-liner</button>
+          <button type="button" role="tab" id="dev-tab-package" aria-selected="false" aria-controls="dev-panel-package" tabindex="-1">uv</button>
         </div>
 
         <div class="dev-panel" role="tabpanel" id="dev-panel-setup" aria-labelledby="dev-tab-setup">
