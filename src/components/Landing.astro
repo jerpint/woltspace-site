@@ -29,74 +29,81 @@ import '../styles/landing.css';
     <p class="brand-tagline">gnaw. build. repeat.</p>
   </header>
 <section style="margin-top:0;margin-bottom:48px">
-    <h2 class="intro-headline"><span class="ws-brand-word">woltspace</span> is the <span class="intro-kw">scaffold</span> for your harnesses.</h2>
-    <p class="intro-body">Claude Code, Codex, opencode - the harness has become another layer of the stack. The scaffold is what's missing: where your <s style="text-decoration-color:var(--ink-3);text-decoration-thickness:1.5px">coding agents</s> wolts live, persist, and pick up where you left off.</p>
+    <h2 class="intro-headline">Give your coding agents a place to <span class="intro-kw">live.</span></h2>
+    <p class="intro-body">Wolts are coding agents with a home, a memory, and room to build. Sessions end; wolts always pick up where you left off.</p>
   </section>
 
-  <div class="install-card">
-  <div class="install-block" style="margin:0;animation:none">
-    <div class="install-label">Run this in your terminal to get started</div>
-    <div class="install-cmd">
-      <code><span class="prompt">$</span>curl -fsSL https://woltspace.com/install.sh | bash</code>
-      <button class="copy-btn" onclick="copyInstall()"><span id="copy-label">Copy</span></button>
-    </div>
+  <div class="install-card" data-install-picker>
+    <div class="install-block" style="margin:0;animation:none">
+      <div class="install-picker-intro">
+        <div class="install-label">Install on your computer</div>
+        <h3 class="install-heading">Choose what feels familiar.</h3>
+        <p class="install-copy">Native on macOS and Linux. Windows works through WSL.</p>
+      </div>
 
-    <details class="prereq">
-      <summary class="prereq-summary">
-        <span class="prereq-summary-icon">🐳</span>
-        <span class="prereq-summary-text"><strong>New to all this?</strong> How to install Docker and open a terminal</span>
-        <span class="prereq-summary-caret">▼</span>
-      </summary>
-      <div class="prereq-detail">
-        <div class="prereq-steps">
-          <div class="prereq-step">
-            <div class="prereq-step-num">1</div>
-            <div class="prereq-step-text"><strong>Download Docker Desktop</strong>: free, works on Mac, Windows, and Linux. <a href="https://www.docker.com/products/docker-desktop/" target="_blank" rel="noopener" style="color:var(--terra);border-bottom:1px solid rgba(196,83,30,0.35);text-decoration:none">Get it here →</a></div>
+      <div class="install-tabs" role="tablist" aria-label="Installation method">
+        <button type="button" role="tab" id="install-tab-ai" data-install-tab="ai" aria-selected="true" aria-controls="install-panel-ai" tabindex="0">
+          <span>Install with AI</span>
+          <small>Easiest</small>
+        </button>
+        <button type="button" role="tab" id="install-tab-terminal" data-install-tab="terminal" aria-selected="false" aria-controls="install-panel-terminal" tabindex="-1">
+          <span>Use the terminal</span>
+          <small>Developers</small>
+        </button>
+      </div>
+
+      <div class="install-panel" role="tabpanel" id="install-panel-ai" aria-labelledby="install-tab-ai">
+        <div class="install-choice-heading">
+          <h4>Let your coding agent handle it</h4>
+          <span class="install-badge">Recommended</span>
+        </div>
+        <p class="install-copy">Paste this into Claude Code or Codex. It will check your Mac, explain each step, and open the lodge.</p>
+        <div class="install-cmd ai-prompt">
+          <code>Install Woltspace on this computer. Follow https://woltspace.com/install-with-ai.txt</code>
+          <button class="copy-btn" onclick="copyText('Install Woltspace on this computer. Follow https://woltspace.com/install-with-ai.txt', 'copy-ai-label')" aria-label="Copy install prompt"><span id="copy-ai-label" aria-live="polite">Copy</span></button>
+        </div>
+        <p class="install-note">Requires Claude Code or Codex with terminal access. Windows setup uses WSL and is still a work in progress.</p>
+      </div>
+
+      <div class="install-panel" role="tabpanel" id="install-panel-terminal" aria-labelledby="install-tab-terminal" hidden>
+        <div class="dev-tabs" role="tablist" aria-label="Developer installation method">
+          <span class="dev-tabs-label">install</span>
+          <button type="button" role="tab" id="dev-tab-setup" aria-selected="true" aria-controls="dev-panel-setup" tabindex="0">One-liner</button>
+          <button type="button" role="tab" id="dev-tab-package" aria-selected="false" aria-controls="dev-panel-package" tabindex="-1">uv</button>
+        </div>
+
+        <div class="dev-panel" role="tabpanel" id="dev-panel-setup" aria-labelledby="dev-tab-setup">
+          <h4>Run the setup script</h4>
+          <p class="install-copy">Checks and installs the native prerequisites, then installs Woltspace.</p>
+          <div class="install-cmd">
+            <code><span class="prompt">$</span>curl -fsSL https://woltspace.com/install.sh | bash -s -- --native</code>
+            <button class="copy-btn" onclick="copyText('curl -fsSL https://woltspace.com/install.sh | bash -s -- --native', 'copy-dev-label')" aria-label="Copy install command"><span id="copy-dev-label" aria-live="polite">Copy</span></button>
           </div>
-          <div class="prereq-step">
-            <div class="prereq-step-num">2</div>
-            <div class="prereq-step-text"><strong>Install and open it.</strong> A small whale icon will appear in your menu bar. That means it's running.</div>
+          <p class="install-note">On Windows, run this command inside WSL.</p>
+        </div>
+
+        <div class="dev-panel" role="tabpanel" id="dev-panel-package" aria-labelledby="dev-tab-package" hidden>
+          <h4>Install the package directly</h4>
+          <p class="install-copy">Install the CLI directly with uv, then start the lodge.</p>
+          <div class="install-cmd">
+            <code><span class="prompt">$</span>uv tool install 'woltspace[connectors]'<br /><span class="prompt">$</span>woltspace start</code>
+            <button class="copy-btn" onclick="copyText(`uv tool install 'woltspace[connectors]' &amp;&amp; woltspace start`, 'copy-uv-label')" aria-label="Copy uv install and start commands"><span id="copy-uv-label" aria-live="polite">Copy</span></button>
           </div>
-          <div class="prereq-step">
-            <div class="prereq-step-num">3</div>
-            <div class="prereq-step-text"><strong>Open your terminal.</strong>
-              <div class="terminal-os-tabs" style="margin-top:10px">
-                <button class="terminal-os-tab" data-os="mac" onclick="switchOS('mac')">Mac</button>
-                <button class="terminal-os-tab" data-os="win" onclick="switchOS('win')">Windows</button>
-                <button class="terminal-os-tab" data-os="linux" onclick="switchOS('linux')">Linux</button>
-              </div>
-              <div class="terminal-os-panel" id="os-mac" style="margin-top:8px">
-                <div class="terminal-shortcut">
-                  <div class="terminal-shortcut-keys"><span class="kbd">⌘</span><span style="color:var(--ink-3);font-size:11px">+</span><span class="kbd">Space</span></div>
-                  <div class="terminal-shortcut-desc">Open Spotlight, type <strong>Terminal</strong>, press Enter. Or find it in Applications → Utilities → Terminal.</div>
-                </div>
-              </div>
-              <div class="terminal-os-panel" id="os-win" style="margin-top:8px">
-                <div class="terminal-shortcut">
-                  <div class="terminal-shortcut-keys"><span class="kbd">Win</span><span style="color:var(--ink-3);font-size:11px">+</span><span class="kbd">R</span></div>
-                  <div class="terminal-shortcut-desc">Type <strong>powershell</strong> and press Enter. Or search "PowerShell" in the Start menu. Note: you may need to install <a href="https://docs.microsoft.com/windows/wsl/" target="_blank" rel="noopener" style="color:var(--terra)">WSL</a> first for this command to work on Windows.</div>
-                </div>
-              </div>
-              <div class="terminal-os-panel" id="os-linux" style="margin-top:8px">
-                <div class="terminal-shortcut">
-                  <div class="terminal-shortcut-keys"><span class="kbd">Ctrl</span><span style="color:var(--ink-3);font-size:11px">+</span><span class="kbd">Alt</span><span style="color:var(--ink-3);font-size:11px">+</span><span class="kbd">T</span></div>
-                  <div class="terminal-shortcut-desc">Opens a terminal on most Linux desktops. Or right-click the desktop and look for "Open Terminal".</div>
-                </div>
-              </div>
+          <div class="install-subcommand">
+            <p class="install-note">Optional: install and open the terminal UI.</p>
+            <div class="install-cmd">
+              <code><span class="prompt">$</span>npm install -g @woltspace/tui@latest<br /><span class="prompt">$</span>woltspace tui</code>
+              <button class="copy-btn" onclick="copyText('npm install -g @woltspace/tui@latest &amp;&amp; woltspace tui', 'copy-tui-label')" aria-label="Copy optional TUI install and open commands"><span id="copy-tui-label" aria-live="polite">Copy</span></button>
             </div>
-          </div>
-          <div class="prereq-step">
-            <div class="prereq-step-num">4</div>
-            <div class="prereq-step-text"><strong>Run the command above in your terminal.</strong> That's it.</div>
           </div>
         </div>
       </div>
-    </details>
-    <div class="install-next">
-      <a class="docs-cta" href="/docs/getting-started/">Read the docs →</a>
-      <p class="github-line" style="margin:0">View source on <a class="github-link" href="https://github.com/jerpint/woltspace">GitHub</a></p>
+
+      <div class="install-next">
+        <a class="docs-cta" href="/docs/getting-started/">Read the docs →</a>
+        <p class="github-line" style="margin:0">View source on <a class="github-link" href="https://github.com/jerpint/woltspace">GitHub</a></p>
+      </div>
     </div>
-  </div>
   </div>
   <div class="section-divider"></div>
 
@@ -149,13 +156,20 @@ import '../styles/landing.css';
 <footer><p>🦫 woltspace: give your wolt a lodge.</p></footer>
 </div>
 <script is:inline>
-function copyInstall(){
-  var cmd='curl -fsSL https://woltspace.com/install.sh | bash';
-  var label=document.getElementById('copy-label');
-  function onSuccess(){label.textContent='✓ Copied';setTimeout(function(){label.textContent='Copy'},2000);}
+function copyText(value, labelId){
+  var label=document.getElementById(labelId);
+  var button=label.closest('button');
+  var originalLabel=label.textContent;
+  var originalAria=button.getAttribute('aria-label');
+  function onSuccess(){
+    label.textContent='✓ Copied';
+    button.setAttribute('aria-label','Copied');
+    button.classList.add('copied');
+    setTimeout(function(){label.textContent=originalLabel;button.setAttribute('aria-label',originalAria);button.classList.remove('copied')},2000);
+  }
   function onFail(){
     var ta=document.createElement('textarea');
-    ta.value=cmd;
+    ta.value=value;
     ta.style.cssText='position:fixed;top:0;left:0;opacity:0;pointer-events:none';
     document.body.appendChild(ta);
     ta.focus();ta.select();
@@ -163,27 +177,44 @@ function copyInstall(){
     document.body.removeChild(ta);
   }
   if(navigator.clipboard&&navigator.clipboard.writeText){
-    navigator.clipboard.writeText(cmd).then(onSuccess,onFail);
+    navigator.clipboard.writeText(value).then(onSuccess,onFail);
   } else {
     onFail();
   }
 }
 
-// Detect platform and activate the right OS tab
-(function(){
-  var ua=navigator.userAgent;
-  var os=ua.indexOf('Mac')>-1?'mac':ua.indexOf('Win')>-1?'win':'linux';
-  switchOS(os);
-})();
+(function setupInstallPicker(){
+  var picker=document.querySelector('[data-install-picker]');
+  if(!picker)return;
+  Array.from(picker.querySelectorAll('[role="tablist"]')).forEach(function(tablist){
+    var tabs=Array.from(tablist.children).filter(function(child){return child.getAttribute('role')==='tab'});
 
-function switchOS(os){
-  document.querySelectorAll('.terminal-os-tab').forEach(function(t){
-    t.classList.toggle('active', t.dataset.os===os);
+    function activate(tab, moveFocus){
+      tabs.forEach(function(candidate){
+        var selected=candidate===tab;
+        candidate.setAttribute('aria-selected',String(selected));
+        candidate.tabIndex=selected?0:-1;
+        var panel=document.getElementById(candidate.getAttribute('aria-controls'));
+        if(panel)panel.hidden=!selected;
+      });
+      if(moveFocus)tab.focus();
+    }
+
+    tabs.forEach(function(tab,index){
+      tab.addEventListener('click',function(){activate(tab,false)});
+      tab.addEventListener('keydown',function(event){
+        var nextIndex;
+        if(event.key==='ArrowLeft')nextIndex=(index+tabs.length-1)%tabs.length;
+        else if(event.key==='ArrowRight')nextIndex=(index+1)%tabs.length;
+        else if(event.key==='Home')nextIndex=0;
+        else if(event.key==='End')nextIndex=tabs.length-1;
+        else return;
+        event.preventDefault();
+        activate(tabs[nextIndex],true);
+      });
+    });
   });
-  document.querySelectorAll('.terminal-os-panel').forEach(function(p){
-    p.classList.toggle('active', p.id==='os-'+os);
-  });
-}
+})();
 
 // 🦫 console easter egg
 console.log('🦫 wolt beaver builder');

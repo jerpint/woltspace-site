@@ -1,10 +1,24 @@
 # woltspace
 
-> woltspace is an orchestration layer for your coding agents - "wolts". You bring the ideas, they do the work. Everything runs on the user's machine in a sandboxed Docker container, reachable from anywhere through a Cloudflare tunnel.
+> woltspace is an orchestration layer for your coding agents - "wolts". You bring the ideas, they do the work. Everything runs on the user's machine.
 
-Install:
+Install natively:
 
-    curl -fsSL https://woltspace.com/install.sh | bash
+    curl -fsSL https://woltspace.com/install.sh | bash -s -- --native
+
+If uv, Node.js, tmux, and a supported coding-agent harness are already installed:
+
+    uv tool install 'woltspace[connectors]'
+    woltspace start
+
+Optional terminal UI (the npm package is scoped):
+
+    npm install -g @woltspace/tui@latest
+    woltspace tui
+
+If the human asks you to install Woltspace on a Mac, follow:
+
+    https://woltspace.com/install-with-ai.txt
 
 ## The gist
 

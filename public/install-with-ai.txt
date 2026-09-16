@@ -1,0 +1,108 @@
+# Install Woltspace with a coding agent (macOS, Linux, or Windows via WSL)
+
+You are helping the user install Woltspace natively on macOS or Linux, or inside WSL on Windows. Own the setup from preflight through a working local lodge, but keep the user in control of privileged or system-wide changes.
+
+## Guardrails
+
+- macOS and Linux are supported native paths. On Linux, install the documented dependencies with the system's existing package manager.
+- Windows is possible through WSL2, but is still a work in progress. Tell the user that before proceeding. Install and run every Woltspace dependency inside WSL, not partly in Windows and partly in Linux.
+- If the machine is not macOS, Linux, or Windows with WSL2, stop and direct the user to https://woltspace.com/docs/getting-started.
+- Do not install or use Docker for this path.
+- Do not enable a tunnel or public access unless the user explicitly asks.
+- Explain what is missing before installing prerequisites.
+- Ask before using `sudo`, installing Homebrew, accepting an OS prompt, or changing shell startup files.
+- Never expose tokens, credentials, or private configuration in chat output.
+- Preserve an existing Woltspace installation and its data. Do not overwrite or delete `~/.woltspace/wolts`.
+
+## 0. Explain and confirm
+
+Before running any commands, briefly explain Woltspace in plain language:
+
+- Woltspace gives coding agents persistent homes, memory, and space to build, so they can pick up across sessions.
+- It runs on the user's computer, uses a supported coding-agent harness, and keeps its durable data under `~/.woltspace/wolts`.
+- The native setup installs a local control plane and terminal interface plus any missing prerequisites. On Windows, it runs inside WSL2.
+
+Keep this explanation to two or three sentences. Then ask: **“Would you like me to continue with the install?”** Wait for a clear yes before inspecting the system, installing prerequisites, or running the installer.
+
+## 1. Inspect
+
+Check, without changing anything:
+
+```bash
+uname -s
+uname -m
+sw_vers 2>/dev/null || true
+printf 'WSL_DISTRO_NAME=%s\n' "${WSL_DISTRO_NAME:-}"
+grep -qi microsoft /proc/version 2>/dev/null && echo WSL=true || true
+command -v woltspace || true
+command -v uv || true
+command -v node || true
+node --version 2>/dev/null || true
+command -v tmux || true
+command -v claude || command -v codex || command -v opencode || true
+df -h "$HOME"
+```
+
+On Windows, first check `wsl --status` from Windows. If WSL2 or a Linux distribution is missing, explain that `wsl --install` may require Administrator approval and a restart, and ask before running it. Continue the remaining inspection and installation from inside the WSL distribution. Install Node, `uv`, `tmux`, and the harness inside WSL even if Windows-native copies already exist.
+
+If `woltspace` already exists, run `woltspace status` and `woltspace doctor` first. Upgrade or repair it instead of creating a competing installation.
+
+## 2. Prepare prerequisites
+
+The native install needs:
+
+- `uv`
+- Node.js 18 or newer
+- `tmux`
+- at least one supported harness: Claude Code, Codex, or OpenCode
+
+The current coding agent may already satisfy the harness requirement. Install only what is missing. Prefer an existing package manager. If Homebrew is installed, the usual command is:
+
+```bash
+brew install uv node tmux
+```
+
+If Homebrew is not installed on macOS, explain the available options and ask before installing it or using vendor installers. On Linux, use the existing distribution package manager and ask before `sudo`; do not install Homebrew. Re-check every prerequisite after installation.
+
+## 3. Install Woltspace
+
+Run the official native installer:
+
+```bash
+curl -fsSL https://woltspace.com/install.sh | bash -s -- --native
+```
+
+If the installer reports that Woltspace is not on PATH, follow its printed PATH instructions, refresh the current shell, and verify `command -v woltspace` works. Do not silently edit shell files.
+
+## 4. Verify and start
+
+Run:
+
+```bash
+woltspace --version
+woltspace doctor
+woltspace start
+woltspace status
+```
+
+Resolve actionable diagnostic failures. Do not weaken macOS security settings to make the install pass.
+
+When the lodge is healthy, open it on macOS:
+
+```bash
+open http://127.0.0.1:7777
+```
+
+On a Linux desktop, use the available system opener:
+
+```bash
+xdg-open http://127.0.0.1:7777
+```
+
+From WSL, open it in the Windows browser:
+
+```bash
+explorer.exe http://127.0.0.1:7777
+```
+
+Tell the user what was installed, where Woltspace stores its persistent data (`~/.woltspace/wolts`, including inside the WSL home on Windows), and how to stop it (`woltspace stop`). Then help them complete the lodge's first-run flow.
