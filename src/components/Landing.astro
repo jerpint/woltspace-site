@@ -66,15 +66,23 @@ import '../styles/landing.css';
       </div>
 
       <div class="install-panel" role="tabpanel" id="install-panel-terminal" aria-labelledby="install-tab-terminal" hidden>
-        <h4>Install directly</h4>
-        <p class="install-copy">Run one command in your terminal. Best if you already know your way around the command line.</p>
-        <div class="install-cmd">
-          <code><span class="prompt">$</span>curl -fsSL https://woltspace.com/install.sh | bash -s -- --native</code>
-          <button class="copy-btn" onclick="copyText('curl -fsSL https://woltspace.com/install.sh | bash -s -- --native', 'copy-dev-label')" aria-label="Copy install command"><span id="copy-dev-label" aria-live="polite">Copy</span></button>
+        <div class="dev-tabs" role="tablist" aria-label="Developer installation method">
+          <button type="button" role="tab" id="dev-tab-setup" aria-selected="true" aria-controls="dev-panel-setup" tabindex="0">Setup script</button>
+          <button type="button" role="tab" id="dev-tab-package" aria-selected="false" aria-controls="dev-panel-package" tabindex="-1">Have dependencies</button>
         </div>
-        <p class="install-note">On Windows, run this command inside WSL.</p>
-        <div class="install-alternative">
-          <h5>Already have the dependencies?</h5>
+
+        <div class="dev-panel" role="tabpanel" id="dev-panel-setup" aria-labelledby="dev-tab-setup">
+          <h4>Run the setup script</h4>
+          <p class="install-copy">Checks and installs the native prerequisites, then installs Woltspace.</p>
+          <div class="install-cmd">
+            <code><span class="prompt">$</span>curl -fsSL https://woltspace.com/install.sh | bash -s -- --native</code>
+            <button class="copy-btn" onclick="copyText('curl -fsSL https://woltspace.com/install.sh | bash -s -- --native', 'copy-dev-label')" aria-label="Copy install command"><span id="copy-dev-label" aria-live="polite">Copy</span></button>
+          </div>
+          <p class="install-note">On Windows, run this command inside WSL.</p>
+        </div>
+
+        <div class="dev-panel" role="tabpanel" id="dev-panel-package" aria-labelledby="dev-tab-package" hidden>
+          <h4>Install the package directly</h4>
           <p class="install-copy">Install the CLI directly with uv, then start the lodge.</p>
           <div class="install-cmd">
             <code><span class="prompt">$</span>uv tool install 'woltspace[connectors]'<br /><span class="prompt">$</span>woltspace start</code>
@@ -177,30 +185,32 @@ function copyText(value, labelId){
 (function setupInstallPicker(){
   var picker=document.querySelector('[data-install-picker]');
   if(!picker)return;
-  var tabs=Array.from(picker.querySelectorAll('[role="tab"]'));
-  var panels=Array.from(picker.querySelectorAll('[role="tabpanel"]'));
+  Array.from(picker.querySelectorAll('[role="tablist"]')).forEach(function(tablist){
+    var tabs=Array.from(tablist.children).filter(function(child){return child.getAttribute('role')==='tab'});
 
-  function activate(tab, moveFocus){
-    tabs.forEach(function(candidate){
-      var selected=candidate===tab;
-      candidate.setAttribute('aria-selected',String(selected));
-      candidate.tabIndex=selected?0:-1;
-    });
-    panels.forEach(function(panel){panel.hidden=panel.id!==tab.getAttribute('aria-controls')});
-    if(moveFocus)tab.focus();
-  }
+    function activate(tab, moveFocus){
+      tabs.forEach(function(candidate){
+        var selected=candidate===tab;
+        candidate.setAttribute('aria-selected',String(selected));
+        candidate.tabIndex=selected?0:-1;
+        var panel=document.getElementById(candidate.getAttribute('aria-controls'));
+        if(panel)panel.hidden=!selected;
+      });
+      if(moveFocus)tab.focus();
+    }
 
-  tabs.forEach(function(tab,index){
-    tab.addEventListener('click',function(){activate(tab,false)});
-    tab.addEventListener('keydown',function(event){
-      var nextIndex;
-      if(event.key==='ArrowLeft')nextIndex=(index+tabs.length-1)%tabs.length;
-      else if(event.key==='ArrowRight')nextIndex=(index+1)%tabs.length;
-      else if(event.key==='Home')nextIndex=0;
-      else if(event.key==='End')nextIndex=tabs.length-1;
-      else return;
-      event.preventDefault();
-      activate(tabs[nextIndex],true);
+    tabs.forEach(function(tab,index){
+      tab.addEventListener('click',function(){activate(tab,false)});
+      tab.addEventListener('keydown',function(event){
+        var nextIndex;
+        if(event.key==='ArrowLeft')nextIndex=(index+tabs.length-1)%tabs.length;
+        else if(event.key==='ArrowRight')nextIndex=(index+1)%tabs.length;
+        else if(event.key==='Home')nextIndex=0;
+        else if(event.key==='End')nextIndex=tabs.length-1;
+        else return;
+        event.preventDefault();
+        activate(tabs[nextIndex],true);
+      });
     });
   });
 })();
