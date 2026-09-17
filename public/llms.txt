@@ -8,7 +8,7 @@ Install natively:
 
 If uv, Node.js, tmux, and a supported coding-agent harness are already installed:
 
-    uv tool install 'woltspace[connectors]'
+    uv tool install woltspace
     woltspace start
 
 Optional terminal UI (the npm package is scoped):
