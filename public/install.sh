@@ -64,7 +64,7 @@ fi
 [ "$missing" -eq 0 ] || { echo; echo "install the missing pieces above, then re-run."; exit 1; }
 
 say "installing woltspace (python) ..."
-uv tool install --force 'woltspace[connectors]' >/dev/null
+uv tool install --force woltspace >/dev/null
 say "installing @woltspace/tui (node) ..."
 npm install -g @woltspace/tui >/dev/null 2>&1 || { echo "error: npm install -g @woltspace/tui failed - check npm permissions (nvm avoids sudo)"; exit 1; }
 
