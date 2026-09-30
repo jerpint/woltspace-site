@@ -46,12 +46,14 @@ if ! need uv; then
   missing=1
   say "missing: uv          -> curl -LsSf https://astral.sh/uv/install.sh | sh"
 fi
+# node is optional: only the terminal UI (woltspace tui) needs it. The lodge itself is python.
+tui=1
 if need node; then
   major=$(node -p 'process.versions.node.split(".")[0]' 2>/dev/null || echo 0)
-  if [ "${major:-0}" -lt 18 ]; then missing=1; say "node $major is too old  -> need node >= 18 (https://nodejs.org or nvm)"; fi
+  if [ "${major:-0}" -lt 18 ]; then tui=0; say "note: node $major is too old for the terminal UI (needs >= 18) - skipping it; the lodge works without it"; fi
 else
-  missing=1
-  say "missing: node >= 18  -> https://nodejs.org (or: brew install node)"
+  tui=0
+  say "note: no node - skipping the optional terminal UI (woltspace tui); the lodge works without it"
 fi
 if ! need tmux; then
   missing=1
@@ -64,9 +66,12 @@ fi
 [ "$missing" -eq 0 ] || { echo; echo "install the missing pieces above, then re-run."; exit 1; }
 
 say "installing woltspace (python) ..."
-uv tool install --force woltspace >/dev/null
-say "installing @woltspace/tui (node) ..."
-npm install -g @woltspace/tui >/dev/null 2>&1 || { echo "error: npm install -g @woltspace/tui failed - check npm permissions (nvm avoids sudo)"; exit 1; }
+# WOLTSPACE_INSTALL_SPEC lets a tester install a pre-release build (a uv requirement, e.g. a git URL).
+uv tool install --force "${WOLTSPACE_INSTALL_SPEC:-woltspace}" >/dev/null
+if [ "$tui" -eq 1 ]; then
+  say "installing @woltspace/tui (node) ..."
+  npm install -g @woltspace/tui >/dev/null 2>&1 || say "note: npm install -g @woltspace/tui failed (npm permissions? nvm avoids sudo) - skipping the optional terminal UI"
+fi
 
 # uv's bin dir has to be on PATH for `woltspace` to resolve in a fresh shell.
 uvbin="$(uv tool dir --bin 2>/dev/null || echo "$HOME/.local/bin")"
