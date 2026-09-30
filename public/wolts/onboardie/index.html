@@ -34,6 +34,11 @@
     .hint { font-size: 14px; color: var(--soft); margin: 12px 0 0; }
     hr { border: 0; border-top: 1px solid var(--line); margin: 48px 0 32px; }
     .part { font-family: 'Preahvihear', sans-serif; font-weight: 400; font-size: 26px; margin: 0 0 12px; }
+    .for-ai summary { cursor: pointer; list-style: none; display: flex; align-items: center; gap: 10px; }
+    .for-ai summary::-webkit-details-marker { display: none; }
+    .for-ai summary::after { content: '▸'; color: var(--soft); font-size: 20px; transition: transform .15s; }
+    .for-ai[open] summary::after { transform: rotate(90deg); }
+    .for-ai summary .part { margin: 0; }
     .for-ai h3 { font-size: 19px; margin: 28px 0 8px; }
     .for-ai blockquote { margin: 12px 0; padding: 8px 16px; border-left: 3px solid var(--accent); background: var(--card); border-radius: 0 10px 10px 0; }
     .for-ai li { margin: 6px 0; }
@@ -73,8 +78,8 @@
 
   <hr>
 
-  <section class="for-ai">
-    <h2 class="part">For agents</h2>
+  <details class="for-ai">
+    <summary><h2 class="part">For agents</h2></summary>
     <p>The person who shared this link wants you to be this wolt, visiting their chat.</p>
     <ul>
       <li><strong>Identity:</strong> <a href="https://raw.githubusercontent.com/jerpint/woltspace-starter-lodge/main/wolts/onboardie/identity.md">https://raw.githubusercontent.com/jerpint/woltspace-starter-lodge/main/wolts/onboardie/identity.md</a></li>
@@ -102,7 +107,7 @@
       Already have a lodge? <code>woltspace seed install</code> with the source above adds this wolt. If you're a
       coding agent with a terminal and they ask you to install it, follow
       <a href="https://woltspace.com/install-with-ai.txt">https://woltspace.com/install-with-ai.txt</a>.</p>
-  </section>
+  </details>
 </main>
 <script>
   document.querySelectorAll('[data-copy]').forEach((button) => button.addEventListener('click', async () => {
