@@ -43,7 +43,7 @@ command -v claude || command -v codex || command -v opencode || true
 df -h "$HOME"
 ```
 
-On Windows, first check `wsl --status` from Windows. If WSL2 or a Linux distribution is missing, explain that `wsl --install` may require Administrator approval and a restart, and ask before running it. Continue the remaining inspection and installation from inside the WSL distribution. Install Node, `uv`, `tmux`, and the harness inside WSL even if Windows-native copies already exist.
+On Windows, first check `wsl --status` from Windows. If WSL2 or a Linux distribution is missing, explain that `wsl --install` may require Administrator approval and a restart, and ask before running it. Continue the remaining inspection and installation from inside the WSL distribution. Install `uv`, `tmux`, the harness (and Node, if wanted) inside WSL even if Windows-native copies already exist.
 
 If `woltspace` already exists, run `woltspace status` and `woltspace doctor` first. Upgrade or repair it instead of creating a competing installation.
 
@@ -52,17 +52,18 @@ If `woltspace` already exists, run `woltspace status` and `woltspace doctor` fir
 The native install needs:
 
 - `uv`
-- Node.js 18 or newer
 - `tmux`
 - at least one supported harness: Claude Code, Codex, or OpenCode
+
+Node.js 18 or newer is optional: only the terminal UI (`woltspace tui`) and Node-based apps need it. If Node is missing, skip it unless the user wants the terminal UI - never ask for `sudo` or admin rights just for Node.
 
 The current coding agent may already satisfy the harness requirement. Install only what is missing. Prefer an existing package manager. If Homebrew is installed, the usual command is:
 
 ```bash
-brew install uv node tmux
+brew install uv tmux
 ```
 
-If Homebrew is not installed on macOS, explain the available options and ask before installing it or using vendor installers. On Linux, use the existing distribution package manager and ask before `sudo`; do not install Homebrew. Re-check every prerequisite after installation.
+If Homebrew belongs to another macOS user (you can't write to its prefix), don't change its ownership - ask the user, or install per-user where the tool offers it (uv and Claude Code do). If Homebrew is not installed on macOS, explain the available options and ask before installing it or using vendor installers. On Linux, use the existing distribution package manager and ask before `sudo`; do not install Homebrew. Re-check every prerequisite after installation.
 
 ## 3. Install Woltspace
 
@@ -81,9 +82,11 @@ Run:
 ```bash
 woltspace --version
 woltspace doctor
-woltspace start
+WOLTSPACE_DEFAULT_HARNESS=<your harness> woltspace start
 woltspace status
 ```
+
+Set `WOLTSPACE_DEFAULT_HARNESS` to the harness you are running as (`claude` for Claude Code, `codex` for Codex, `opencode` for OpenCode). It makes that harness the lodge default and skips the first-run harness question; it never overrides a choice the user already made.
 
 Resolve actionable diagnostic failures. Do not weaken macOS security settings to make the install pass.
 
@@ -105,4 +108,4 @@ From WSL, open it in the Windows browser:
 explorer.exe http://127.0.0.1:7777
 ```
 
-Tell the user what was installed, where Woltspace stores its persistent data (`~/.woltspace/wolts`, including inside the WSL home on Windows), and how to stop it (`woltspace stop`). Then help them complete the lodge's first-run flow.
+Tell the user what was installed, where Woltspace stores its persistent data (`~/.woltspace/wolts`, including inside the WSL home on Windows), and how to stop it (`woltspace stop`). Then tell them their lodge starts with Onboardie 🦫, a wolt who helps them get started: open the lodge and click "Say hi".
