@@ -1,0 +1,18 @@
+---
+// A wolt or an app in a list.
+import type { Wolt, App } from '../lib/registry';
+interface Props { wolt?: Wolt; app?: App }
+const { wolt, app } = Astro.props;
+const item = (wolt ?? app)!;
+const href = wolt ? `/wolts/${item.ranger}/${item.name}` : `/dam/${item.ranger}/${item.name}`;
+const meta = wolt ? [wolt.type, wolt.role] : [app!.stack, app!.keeper && `kept by ${app!.keeper}`];
+if (item.seed.stars !== null) meta.push(`★ ${item.seed.stars}`);
+---
+<li><a class="item" href={href}>
+  <div class="top">
+    <span class="name"><span>{item.ranger} /</span> {item.name} {item.emoji}</span>
+    {item.verified ? <span class="badge official">by Woltspace</span> : <span class="badge unverified">unverified</span>}
+  </div>
+  {item.description && <p>{item.description}</p>}
+  <div class="meta">{meta.filter(Boolean).join(' · ')}</div>
+</a></li>

@@ -1,0 +1,49 @@
+---
+import Share from '../../../layouts/Share.astro';
+import Warning from '../../../components/Warning.astro';
+import { loadShare } from '../../../lib/registry';
+
+export async function getStaticPaths() {
+  const { rangers } = await loadShare();
+  return rangers.flatMap((ranger) => ranger.apps.map((app) => ({
+    params: { ranger: app.ranger, app: app.name }, props: { app, ranger },
+  })));
+}
+const { app, ranger } = Astro.props;
+const heading = [app.name, app.emoji].filter(Boolean).join(' ');
+const keeper = ranger.wolts.find((wolt) => wolt.name === app.keeper);
+---
+<Share title={heading} description={app.description || `${app.name}, an app shared by ${app.ranger}.`} path={`/dam/${app.ranger}/${app.name}`}>
+  <p class="back"><a href="/">woltspace</a> / <a href="/dam">dam</a> / <a href={`/rangers/${app.ranger}`}>{app.ranger}</a> / {app.name}</p>
+
+  {!app.verified && <Warning kind="app" ranger={app.ranger} />}
+
+  <h1>{heading}</h1>
+  <p class="by">
+    <img src={`https://github.com/${app.ranger}.png?size=48`} alt="" width="24" height="24">
+    by <a href={`/rangers/${app.ranger}`}>{app.ranger}</a>
+    {ranger.badge && <span class="badge ranger">🌲 {ranger.badge}</span>}
+    {app.verified ? <span class="badge official">by Woltspace</span> : <span class="badge unverified">unverified</span>}
+    {app.seed.stars !== null && <a href={app.seed.url}>★ {app.seed.stars}</a>}
+  </p>
+
+  {app.description && <p>{app.description}</p>}
+
+  <div class="paste">
+    <p><strong>Add it to your lodge.</strong> Already have Woltspace? Run:</p>
+    <div class="row">
+      <div class="cmd" id="seed">woltspace seed install {app.seed.gitUrl}</div>
+      <button type="button" data-copy="seed">Copy</button>
+    </div>
+    <p class="hint">An app is a program that runs on your computer. This installs the whole seed, including the wolt that keeps the app.</p>
+  </div>
+
+  <h2 class="part">What you're getting</h2>
+  <table class="facts">
+    {app.stack && <tr><td>Stack</td><td>{app.stack}</td></tr>}
+    {app.start && <tr><td>It runs</td><td><code>{app.start}</code></td></tr>}
+    {app.keeper && <tr><td>Kept by</td><td>{keeper ? <a href={`/wolts/${keeper.ranger}/${keeper.name}`}>{keeper.name}</a> : app.keeper}</td></tr>}
+    <tr><td>Source</td><td><a href={app.sourceUrl}>{app.sourceUrl.replace('https://github.com/', '')}</a></td></tr>
+    <tr><td>Updated</td><td>{app.seed.updated ? `${app.seed.updated} · ` : ''}follows the repo{!app.verified && ', so it can change at any time'}</td></tr>
+  </table>
+</Share>

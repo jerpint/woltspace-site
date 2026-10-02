@@ -1,0 +1,13 @@
+---
+import WoltPage from '../../../components/WoltPage.astro';
+import { loadShare } from '../../../lib/registry';
+
+export async function getStaticPaths() {
+  const { rangers } = await loadShare();
+  return rangers.flatMap((ranger) => ranger.wolts.map((wolt) => ({
+    params: { ranger: wolt.ranger, wolt: wolt.name }, props: { wolt, ranger },
+  })));
+}
+const { wolt, ranger } = Astro.props;
+---
+<WoltPage wolt={wolt} ranger={ranger} path={`/wolts/${wolt.ranger}/${wolt.name}`} />

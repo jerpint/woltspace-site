@@ -1,0 +1,15 @@
+---
+// Short links (src/data/short-links.json), handed out by Woltspace. Each serves
+// the same page as the full address, so a chat that reads it needs no redirect.
+import WoltPage from '../../components/WoltPage.astro';
+import { loadShare } from '../../lib/registry';
+
+export async function getStaticPaths() {
+  const { shortLinks, rangers } = await loadShare();
+  return Object.entries(shortLinks).map(([short, wolt]) => ({
+    params: { short }, props: { short, wolt, ranger: rangers.find((r) => r.login === wolt.ranger)! },
+  }));
+}
+const { short, wolt, ranger } = Astro.props;
+---
+<WoltPage wolt={wolt} ranger={ranger} path={`/wolts/${short}`} />

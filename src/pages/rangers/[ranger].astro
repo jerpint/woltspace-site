@@ -1,0 +1,29 @@
+---
+import Share from '../../layouts/Share.astro';
+import ShareCard from '../../components/ShareCard.astro';
+import { loadShare } from '../../lib/registry';
+
+export async function getStaticPaths() {
+  const { rangers } = await loadShare();
+  return rangers.map((ranger) => ({ params: { ranger: ranger.login }, props: { ranger } }));
+}
+const { ranger } = Astro.props;
+---
+<Share title={ranger.login} description={`Wolts and apps shared by ${ranger.login}.`} path={`/rangers/${ranger.login}`}>
+  <p class="back"><a href="/">woltspace</a> / <a href="/rangers">rangers</a> / {ranger.login}</p>
+
+  <div class="profile">
+    <img src={`https://github.com/${ranger.login}.png?size=168`} alt="" width="84" height="84">
+    <div>
+      <h1>{ranger.login}</h1>
+      {ranger.badge && <span class="badge ranger">🌲 {ranger.badge}</span>}
+    </div>
+  </div>
+  <p class="hint"><a href={`https://github.com/${ranger.login}`}>github.com/{ranger.login}</a></p>
+
+  <h2 class="part">Wolts</h2>
+  {ranger.wolts.length ? <ul class="list">{ranger.wolts.map((wolt) => <ShareCard wolt={wolt} />)}</ul> : <div class="empty">No wolts shared yet.</div>}
+
+  <h2 class="part">Apps</h2>
+  {ranger.apps.length ? <ul class="list">{ranger.apps.map((app) => <ShareCard app={app} />)}</ul> : <div class="empty">No apps on the dam yet.</div>}
+</Share>

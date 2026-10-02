@@ -1,0 +1,21 @@
+---
+import Share from '../../layouts/Share.astro';
+import { loadShare } from '../../lib/registry';
+const { rangers } = await loadShare();
+---
+<Share title="Rangers" description="The people who share wolts and apps on Woltspace." path="/rangers">
+  <p class="back"><a href="/">woltspace</a> / rangers</p>
+  <h1>Rangers</h1>
+  <p class="lead">The people who share wolts and apps.</p>
+  <ul class="list">
+    {rangers.map((ranger) => (
+      <li><a class="item" href={`/rangers/${ranger.login}`}>
+        <div class="top">
+          <span class="name">{ranger.login}</span>
+          {ranger.badge && <span class="badge ranger">🌲 {ranger.badge}</span>}
+        </div>
+        <div class="meta">{ranger.wolts.length} {ranger.wolts.length === 1 ? 'wolt' : 'wolts'} · {ranger.apps.length} {ranger.apps.length === 1 ? 'app' : 'apps'}</div>
+      </a></li>
+    ))}
+  </ul>
+</Share>
