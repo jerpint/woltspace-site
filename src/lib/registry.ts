@@ -15,6 +15,13 @@ const fixture = (owner: string, repo: string) => {
 };
 
 const SEED_FORMAT = 'woltspace.colony-seed/v1';
+// Limits, so one seed cannot flood the site or slow the build for everyone.
+const MAX_SEEDS_PER_RANGER = 10;
+const MAX_WOLTS_PER_SEED = 25;
+const MAX_APPS_PER_SEED = 25;
+const MAX_SKILLS_SHOWN = 30;
+const MAX_FILE_BYTES = 64 * 1024;
+const FETCH_TIMEOUT_MS = 15000;
 const LOGIN_RE = /^[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})$/;
 const REPO_RE = /^[A-Za-z0-9._-]{1,100}$/;
 const NAME_RE = /^[a-z0-9][a-z0-9_-]{0,63}$/;
@@ -39,13 +46,16 @@ async function readSeedFile(owner: string, repo: string, file: string): Promise<
   const dir = fixture(owner, repo);
   if (dir) {
     const local = path.join(dir, file);
-    return fs.existsSync(local) ? fs.readFileSync(local, 'utf8') : null;
+    if (!fs.existsSync(local) || fs.statSync(local).size > MAX_FILE_BYTES) return null;
+    return fs.readFileSync(local, 'utf8');
   }
-  const response = await fetch(`https://raw.githubusercontent.com/${owner}/${repo}/HEAD/${file}`);
+  const response = await fetch(`https://raw.githubusercontent.com/${owner}/${repo}/HEAD/${file}`, { signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) });
   if (response.status === 404) return null;
   // Anything else (GitHub down, rate limit) fails the build, so the last good deploy stays up.
   if (!response.ok) throw new Error(`registry: ${owner}/${repo}/${file} answered ${response.status}`);
-  return response.text();
+  if (Number(response.headers.get('content-length') ?? 0) > MAX_FILE_BYTES) return null;
+  const body = await response.text();
+  return body.length > MAX_FILE_BYTES ? null : body;
 }
 
 async function readSeedJson(owner: string, repo: string, file: string): Promise<any | null> {
@@ -60,7 +70,7 @@ async function repoFacts(owner: string, repo: string): Promise<{ stars: number |
   try {
     const headers: Record<string, string> = { accept: 'application/vnd.github+json' };
     if (process.env.GITHUB_TOKEN) headers.authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
-    const response = await fetch(`https://api.github.com/repos/${owner}/${repo}`, { headers });
+    const response = await fetch(`https://api.github.com/repos/${owner}/${repo}`, { headers, signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) });
     if (!response.ok) return { stars: null, updated: null };
     const data = await response.json();
     return { stars: data.stargazers_count ?? null, updated: (data.pushed_at || '').slice(0, 10) || null };
@@ -75,11 +85,9 @@ function registryEntries(): { ranger: string; repo: string }[] {
   for (const ranger of fs.readdirSync(REGISTRY_DIR).sort()) {
     const dir = path.join(REGISTRY_DIR, ranger);
     if (!LOGIN_RE.test(ranger) || !fs.statSync(dir).isDirectory()) continue;
-    for (const file of fs.readdirSync(dir).sort()) {
-      if (!file.endsWith('.json')) continue;
-      const repo = file.slice(0, -5);
-      if (REPO_RE.test(repo)) entries.push({ ranger, repo });
-    }
+    const repos = fs.readdirSync(dir).sort().filter((file) => file.endsWith('.json')).map((file) => file.slice(0, -5)).filter((repo) => REPO_RE.test(repo));
+    if (repos.length > MAX_SEEDS_PER_RANGER) console.warn(`registry: ${ranger} has ${repos.length} seeds, showing the first ${MAX_SEEDS_PER_RANGER}`);
+    for (const repo of repos.slice(0, MAX_SEEDS_PER_RANGER)) entries.push({ ranger, repo });
   }
   return entries;
 }
@@ -92,8 +100,12 @@ async function loadSeed(ranger: string, repo: string, verified: boolean): Promis
 
   const url = `https://github.com/${ranger}/${repo}`;
   const seed: Seed = { ranger, repo, url, gitUrl: `${url}.git`, ...(await repoFacts(ranger, repo)) };
-  const woltEntries = (Array.isArray(manifest.wolts) ? manifest.wolts : []).filter((e: any) => NAME_RE.test(e?.name ?? ''));
-  const appEntries = (Array.isArray(manifest.apps) ? manifest.apps : []).filter((e: any) => NAME_RE.test(e?.name ?? ''));
+  const named = (list: unknown) => (Array.isArray(list) ? list : []).filter((e: any) => NAME_RE.test(e?.name ?? ''));
+  if (named(manifest.wolts).length > MAX_WOLTS_PER_SEED || named(manifest.apps).length > MAX_APPS_PER_SEED) {
+    console.warn(`registry: ${ranger}/${repo} is over the limit (${MAX_WOLTS_PER_SEED} wolts, ${MAX_APPS_PER_SEED} apps); showing the first ones`);
+  }
+  const woltEntries = named(manifest.wolts).slice(0, MAX_WOLTS_PER_SEED);
+  const appEntries = named(manifest.apps).slice(0, MAX_APPS_PER_SEED);
   const woltNames: string[] = woltEntries.map((e: any) => e.name);
   const appNames: string[] = appEntries.map((e: any) => e.name);
 
@@ -105,7 +117,7 @@ async function loadSeed(ranger: string, repo: string, verified: boolean): Promis
     wolts.push({
       ranger, name: entry.name, title: title(entry.name), type, emoji: EMOJI[type] ?? '',
       role: text(config.role, 80), description: text(config.description, 400),
-      skills: (Array.isArray(entry.skills) ? entry.skills : []).filter((s: any) => NAME_RE.test(s ?? '')),
+      skills: (Array.isArray(entry.skills) ? entry.skills : []).filter((s: any) => NAME_RE.test(s ?? '')).slice(0, MAX_SKILLS_SHOWN),
       seed, verified,
       identityUrl: `https://raw.githubusercontent.com/${ranger}/${repo}/HEAD/wolts/${entry.name}/identity.md`,
       treeUrl: `${url}/tree/HEAD/wolts/${entry.name}`,

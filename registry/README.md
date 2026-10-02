@@ -32,6 +32,8 @@ Your **ranger** name is your GitHub name. There is no sign-up.
   from `seed.json` and each `wolt.json` in your repo.
 - Pages follow your repo. Change the seed and the page changes at the next site
   build. You do not need a new pull request.
+- Limits: 10 seeds per ranger, 25 wolts and 25 apps per seed. Past that, only
+  the first ones are shown.
 - Every shared wolt and app is shown as **unverified third party**, with a
   warning, unless Woltspace made it.
 - Badges (`src/data/rangers.json`) and short links like `/wolts/onboardie`
