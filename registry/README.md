@@ -31,7 +31,7 @@ Your **ranger** name is your GitHub name. There is no sign-up.
 - Nobody writes a page. Name, creature, role, description and skills are read
   from `seed.json` and each `wolt.json` in your repo.
 - Pages follow your repo. Change the seed and the page changes at the next site
-  build. You do not need a new pull request.
+  build, at most a day later. You do not need a new pull request.
 - Limits: 10 seeds per ranger, 25 wolts and 25 apps per seed. Past that, only
   the first ones are shown.
 - Every shared wolt and app is shown as **unverified third party**, with a
