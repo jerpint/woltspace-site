@@ -29,9 +29,12 @@ Your **ranger** name is your GitHub name. There is no sign-up.
 - You can only add seeds under your own name. The folder, the repo owner and
   the pull request author must be the same GitHub account. A check enforces it.
 - Nobody writes a page. Name, creature, role, description and skills are read
-  from `seed.json` and each `wolt.json` in your repo.
-- Pages follow your repo. Change the seed and the page changes at the next site
-  build, at most a day later. You do not need a new pull request.
+  from `seed.json` and each `wolt.json` in your repo. A timer
+  (`.github/workflows/snapshot.yml`) reads the seeds and saves a snapshot on the
+  `share-data` branch; the site is built from that snapshot.
+- Pages follow your repo. Add a wolt or an app to your seed, or change one, and
+  the site picks it up within about 15 minutes. You do not need a new pull
+  request.
 - Limits: 10 seeds per ranger, 25 wolts and 25 apps per seed. Past that, only
   the first ones are shown.
 - Every shared wolt and app is shown as **unverified third party**, with a

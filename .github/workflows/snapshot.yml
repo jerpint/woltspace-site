@@ -1,0 +1,73 @@
+name: snapshot
+
+# Every 15 minutes: read the seeds named in registry/ and, only if something
+# changed, save a new snapshot on the `share-data` branch and ask the host to
+# publish the site again. The site builds from that snapshot.
+#
+# `share-data` holds one file, share.json. Its history is the log of every
+# change to what is shared.
+#
+# Optional repo secret DEPLOY_HOOK_URL: a "build hook" URL from whichever host
+# serves the site. Without it the snapshot is still saved, and shows up the
+# next time the site is published.
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'registry/**'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: snapshot
+  cancel-in-progress: false
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Read the seeds
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/snapshot.mjs "$RUNNER_TEMP/share.json"
+      - name: Save the snapshot if it changed
+        id: save
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          if git fetch --depth=1 origin share-data 2>/dev/null; then
+            git checkout -q -B share-data FETCH_HEAD
+          else
+            git checkout -q --orphan share-data
+            git rm -rfq .
+          fi
+          cp "$RUNNER_TEMP/share.json" share.json
+          git add share.json
+          if git diff --cached --quiet; then
+            echo "Nothing changed."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            git commit -q -m "Snapshot of shared wolts and apps"
+            git push -q origin share-data
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Ask the host to publish
+        if: steps.save.outputs.changed == 'true'
+        env:
+          HOOK: ${{ secrets.DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "$HOOK" ]; then
+            echo "DEPLOY_HOOK_URL is not set; the new snapshot shows up at the next publish."
+            exit 0
+          fi
+          curl -fsS -X POST "$HOOK" -o /dev/null
+          echo "Publish requested."
