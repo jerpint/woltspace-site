@@ -6,7 +6,7 @@ import path from 'node:path';
 
 const LOGIN_RE = /^[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})$/;
 const REPO_RE = /^[A-Za-z0-9._-]{1,100}$/;
-const MAINTAINERS = ['jerpint'];
+const MAINTAINERS = ['jerpint', 'woltspace-jerpint[bot]'];
 const errors = [];
 
 for (const ranger of fs.existsSync('registry') ? fs.readdirSync('registry') : []) {
