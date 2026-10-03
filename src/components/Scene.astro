@@ -1,0 +1,15 @@
+---
+// The lodge banner: the home page's landscape, clouds drifting, one critter on the bank.
+import { SCENE, critters, clouds, type Critter } from '../lib/pixels';
+interface Props { critter?: Critter }
+const { critter = 'beaver' } = Astro.props;
+const who = critters[critter] ?? critters.beaver;
+// One scene dot is 1/42 of the banner height. A critter pixel is 0.6 of a dot, a cloud pixel 1.2.
+const dot = `calc(var(--scene-h) / ${SCENE.rows})`;
+---
+<div class="scene" style="background-image:url(/scene.svg)" aria-hidden="true">
+  {clouds.map((cloud, i) => (
+    <div class={`scene-cloud c${i + 1}`} style={`width:calc(${dot} * ${cloud.cols * 1.2})`} set:html={cloud.svg} />
+  ))}
+  <div class="scene-critter" style={`width:calc(${dot} * ${who.cols * 0.6});bottom:${((SCENE.rows - SCENE.bank) / SCENE.rows * 100).toFixed(2)}%`} set:html={who.svg} />
+</div>

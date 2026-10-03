@@ -1,0 +1,7 @@
+---
+// A command to copy. Long links may only break after "/" or ".", never mid-word.
+interface Props { id: string; text: string }
+const { id, text } = Astro.props;
+const parts = text.split(/(?<=[^:\/]\/|\.)/);
+---
+<div class="cmd" id={id}>{parts.map((part, i) => <>{i > 0 && <wbr />}{part}</>)}</div>

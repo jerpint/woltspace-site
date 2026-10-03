@@ -1,0 +1,22 @@
+---
+// A wolt or an app in a list, as a card: picture, "ranger / name", role or
+// description, then trust, kind and stars.
+import ItemFace from './ItemFace.astro';
+import TrustMark from './TrustMark.astro';
+import Stars from './Stars.astro';
+import type { Wolt, App } from '../lib/registry';
+interface Props { wolt?: Wolt; app?: App; showRanger?: boolean }
+const { wolt, app, showRanger = true } = Astro.props;
+const item = (wolt ?? app)!;
+const href = wolt ? `/wolts/${item.ranger}/${item.name}` : `/dam/${item.ranger}/${item.name}`;
+const line = wolt ? wolt.role || wolt.description : app!.description;
+const kind = wolt ? wolt.type : app!.stack;
+---
+<li><a class="card" href={href}>
+  <ItemFace type={wolt?.type} emoji={item.emoji} size="small" />
+  <div class="card-body">
+    <p class="card-name">{showRanger && <span>{item.ranger} / </span>}<b>{item.name}</b></p>
+    {line && <p class="card-line">{line}</p>}
+    <p class="card-meta"><TrustMark verified={item.verified} />{kind && <span>{kind}</span>}<Stars seed={item.seed} link={false} /></p>
+  </div>
+</a></li>

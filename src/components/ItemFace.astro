@@ -1,0 +1,8 @@
+---
+// The square picture of a wolt or an app: its pixel creature, or its emoji.
+import { critters, type Critter } from '../lib/pixels';
+interface Props { type?: string; emoji?: string; size?: 'small' | 'large' }
+const { type = '', emoji = '', size = 'large' } = Astro.props;
+const sprite = type in critters ? critters[type as Critter].svg : null;
+---
+<div class:list={['face', size]}>{sprite ? <Fragment set:html={sprite} /> : <span>{emoji || '🐾'}</span>}</div>

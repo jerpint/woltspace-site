@@ -1,0 +1,12 @@
+---
+// The banner every third-party wolt and app carries.
+interface Props { kind: 'wolt' | 'app'; ranger: string }
+const { kind, ranger } = Astro.props;
+---
+<div class="warn">
+  <strong>⚠️ Unverified third party</strong>
+  This {kind} was made by <b>@{ranger}</b>, not by Woltspace. Nobody at Woltspace has checked what it says or does,
+  and its maker can change it at any time.
+  <p>Always be sure you know what you're getting. Read the source before you
+    {kind === 'wolt' ? 'paste it into a chat or install it' : 'install it'}.</p>
+</div>

@@ -1,0 +1,36 @@
+---
+// A ranger's page, like a profile on Hugging Face: the person on the side,
+// what they shared in the main column.
+import Page from '../../layouts/Page.astro';
+import ShareCard from '../../components/ShareCard.astro';
+import { loadShare } from '../../lib/registry';
+
+export async function getStaticPaths() {
+  const { rangers } = await loadShare();
+  return rangers.map((ranger) => ({ params: { ranger: ranger.login }, props: { ranger } }));
+}
+const { ranger } = Astro.props;
+const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
+const stats = `${plural(ranger.wolts.length, 'wolt')} · ${plural(ranger.apps.length, 'app')}`;
+---
+<Page title={ranger.login} description={`Wolts and apps shared by ${ranger.login}.`} path={`/rangers/${ranger.login}`} wide>
+  <p class="back"><a href="/">woltspace</a> / <a href="/rangers">rangers</a> / {ranger.login}</p>
+
+  <div class="ranger-grid">
+    <aside class="ranger-card">
+      <img src={`https://github.com/${ranger.login}.png?size=320`} alt="" width="160" height="160">
+      <h1>{ranger.login}</h1>
+      {ranger.badge ? <span class="badge ranger">🌲 {ranger.badge}</span> : <span class="badge">Ranger</span>}
+      <p class="stats">{stats}</p>
+      <a class="hint" href={`https://github.com/${ranger.login}`}>github.com/{ranger.login}</a>
+    </aside>
+
+    <div class="ranger-main">
+      <h2 class="label">Wolts</h2>
+      {ranger.wolts.length ? <ul class="cards">{ranger.wolts.map((wolt) => <ShareCard wolt={wolt} showRanger={false} />)}</ul> : <div class="empty">No wolts shared yet.</div>}
+
+      {ranger.apps.length > 0 && <h2 class="label">Apps</h2>}
+      {ranger.apps.length > 0 && <ul class="cards">{ranger.apps.map((app) => <ShareCard app={app} showRanger={false} />)}</ul>}
+    </div>
+  </div>
+</Page>
