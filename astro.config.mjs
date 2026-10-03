@@ -10,6 +10,8 @@ export default defineConfig({
   integrations: [
     starlight({
       title: 'woltspace',
+      // Our own src/pages/404.astro, in the lodge look, serves every missing page.
+      disable404Route: true,
       description: 'a place for builders to build',
       favicon: '/favicon.svg',
       customCss: ['./src/styles/woltspace.css'],

@@ -1,0 +1,23 @@
+---
+// Any address that leads nowhere. Starlight's own 404 is turned off in
+// astro.config.mjs so this one, in the lodge look, is used for the whole site.
+import Page from '../layouts/Page.astro';
+---
+<Page title="Lost in the woods" description="This page does not exist." path="/404" critter="raccoon">
+  <p class="lost-code">404</p>
+  <h1>Lost in the woods</h1>
+  <p class="lead">The raccoon checked every bin. Nothing here. This page moved, or it never existed.</p>
+  <p class="lost-links">
+    <a href="/">Home</a>
+    <a href="/wolts">Meet the wolts</a>
+    <a href="/docs/getting-started/">Get started</a>
+  </p>
+</Page>
+
+<style>
+  .lost-code { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 600; letter-spacing: .12em; color: var(--accent); margin: 32px 0 0; }
+  .lost-code + h1 { margin-top: 4px; }
+  .lost-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+  .lost-links a { border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; text-decoration: none; color: var(--ink); background: var(--card); }
+  .lost-links a:hover { border-color: var(--accent); color: var(--accent); }
+</style>
