@@ -22,12 +22,14 @@ export async function shareCard(name: string, type: string): Promise<Buffer> {
   const critter = type in critters ? (type as Critter) : undefined;
   // The scene is drawn at its final size, so the pixels stay sharp.
   const scene = await sharp(Buffer.from(cardSceneSvg(critter))).png().toBuffer();
-  // 104px like the first card; long names get smaller so they fit the 556px
-  // column (a Preahvihear letter is about 0.6 of the font size wide).
-  const size = Math.min(104, Math.floor(556 / (0.6 * name.length)));
+  // 104px like the first card; long names get smaller to fit the 556px column
+  // (a Preahvihear letter is about 0.6 of the font size wide), but never below
+  // 64px: past that they wrap, after a hyphen or at a space.
+  const size = Math.max(64, Math.min(104, Math.floor(556 / (0.6 * name.length))));
+  const shown = name.replace(/-/g, '-\u200b');
   const card = el('div', { display: 'flex', width: 1200, height: 630, background: '#D5DFE3' }, [
     el('div', { flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '70px 56px 60px 72px' }, [
-      el('div', { fontFamily: 'Preahvihear', fontSize: size, lineHeight: 1, color: '#18100A', margin: '18px 0 22px' }, name),
+      el('div', { fontFamily: 'Preahvihear', fontSize: size, lineHeight: 1.05, color: '#18100A', margin: '18px 0 22px', maxWidth: 556 }, shown),
       el('div', { display: 'flex', flexDirection: 'column', gap: 6, borderTop: '2px solid rgba(24,16,10,.15)', paddingTop: 22, maxWidth: 500 }, [
         el('div', { fontFamily: 'Preahvihear', fontSize: 46, lineHeight: 1, color: '#18100A' }, 'woltspace'),
         el('div', { fontFamily: 'JetBrains Mono', fontSize: 28, color: '#C4531E' }, 'gnaw. build. repeat.'),
