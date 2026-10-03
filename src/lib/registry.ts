@@ -104,6 +104,15 @@ async function load(): Promise<Share> {
   return { rangers: all, wolts, apps: all.flatMap((r) => r.apps), shortLinks };
 }
 
+// Who a GitHub name is here: badge, verified, and whether they have a ranger page.
+// Works for anyone, including someone who has shared nothing yet.
+export async function rangerOf(login: string): Promise<{ login: string; badge: string | null; verified: boolean; hasPage: boolean }> {
+  const { rangers } = await loadShare();
+  const found = rangers.find((r) => r.login.toLowerCase() === login.toLowerCase());
+  const extra = (rangerExtras as Record<string, { badge?: string; verified?: boolean }>)[login.toLowerCase()] ?? {};
+  return { login: found?.login ?? login, badge: extra.badge ?? null, verified: extra.verified === true, hasPage: Boolean(found) };
+}
+
 let cached: Promise<Share> | null = null;
 export function loadShare(): Promise<Share> {
   return (cached ??= load());

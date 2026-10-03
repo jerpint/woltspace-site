@@ -1,21 +1,23 @@
 ---
-import Share from '../../layouts/Share.astro';
+import Page from '../../layouts/Page.astro';
 import { loadShare } from '../../lib/registry';
 const { rangers } = await loadShare();
+const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
 ---
-<Share title="Rangers" description="The people who share wolts and apps on Woltspace." path="/rangers">
+<Page title="Rangers" description="The people who share wolts and apps on Woltspace." path="/rangers" wide>
   <p class="back"><a href="/">woltspace</a> / rangers</p>
-  <h1>Rangers</h1>
-  <p class="lead">The people who share wolts and apps.</p>
-  <ul class="list">
+  <div class="list-head"><h1>Rangers</h1><span class="count">{rangers.length}</span></div>
+  <p class="lead">The people who share wolts and apps. A ranger is a GitHub account.</p>
+  <ul class="cards">
     {rangers.map((ranger) => (
-      <li><a class="item" href={`/rangers/${ranger.login}`}>
-        <div class="top">
-          <span class="name">{ranger.login}</span>
-          {ranger.badge && <span class="badge ranger">🌲 {ranger.badge}</span>}
+      <li><a class="card" href={`/rangers/${ranger.login}`}>
+        <img class="card-avatar" src={`https://github.com/${ranger.login}.png?size=96`} alt="" width="48" height="48">
+        <div class="card-body">
+          <p class="card-name"><b>{ranger.login}</b></p>
+          <p class="card-line">{ranger.badge ? `🌲 ${ranger.badge}` : 'Ranger'}</p>
+          <p class="card-meta"><span>{plural(ranger.wolts.length, 'wolt')}</span><span>{plural(ranger.apps.length, 'app')}</span></p>
         </div>
-        <div class="meta">{ranger.wolts.length} {ranger.wolts.length === 1 ? 'wolt' : 'wolts'} · {ranger.apps.length} {ranger.apps.length === 1 ? 'app' : 'apps'}</div>
       </a></li>
     ))}
   </ul>
-</Share>
+</Page>

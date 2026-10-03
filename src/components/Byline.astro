@@ -1,0 +1,17 @@
+---
+// Who made it: a small card about the person. GitHub picture, name, ranger
+// badge, and the stars of what they shared. Used on wolt pages and app pages.
+// Whether the thing itself is trusted goes next to its title (TrustMark).
+import { rangerOf } from '../lib/registry';
+interface Props { login: string; stars?: number | null; starsUrl?: string }
+const { login, stars = null, starsUrl } = Astro.props;
+const ranger = await rangerOf(login);
+const href = ranger.hasPage ? `/rangers/${ranger.login}` : `https://github.com/${ranger.login}`;
+const sub = ranger.badge ? `🌲 ${ranger.badge}` : ranger.hasPage ? 'Ranger' : 'on GitHub';
+---
+<div class="person">
+  <img src={`https://github.com/${ranger.login}.png?size=96`} alt="" width="44" height="44">
+  <a class="person-name" href={href}>{ranger.login}</a>
+  <span class="person-sub">{sub}</span>
+  {stars !== null && <a class="person-stars" href={starsUrl} title="Stars on GitHub">★ {stars}</a>}
+</div>

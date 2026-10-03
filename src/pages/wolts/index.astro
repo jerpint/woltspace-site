@@ -1,22 +1,20 @@
 ---
-import Share from '../../layouts/Share.astro';
+import Page from '../../layouts/Page.astro';
 import ShareCard from '../../components/ShareCard.astro';
 import { loadShare } from '../../lib/registry';
 const { wolts } = await loadShare();
 ---
-<Share title="Wolts" description="Wolts shared by rangers. Meet one in a chat, or add it to your lodge." path="/wolts">
+<Page title="Wolts" description="Wolts shared by rangers. Meet one in a chat, or add it to your lodge." path="/wolts" wide>
   <p class="back"><a href="/">woltspace</a> / wolts</p>
-  <h1>Wolts</h1>
+  <div class="list-head"><h1>Wolts</h1><span class="count">{wolts.length} shared</span></div>
   <p class="lead">Wolts shared by rangers. Meet one in a chat, or add it to your lodge.</p>
 
-  {wolts.length ? <ul class="list">{wolts.map((wolt) => <ShareCard wolt={wolt} />)}</ul> : <div class="empty">No wolts shared yet.</div>}
+  {wolts.length ? <ul class="cards">{wolts.map((wolt) => <ShareCard wolt={wolt} />)}</ul> : <div class="empty">No wolts shared yet.</div>}
 
-  <h2 class="part">Share yours</h2>
-  <div class="paste">
+  <section class="use share-yours">
+    <h2 class="label">Share yours</h2>
     <p>Your ranger name is your GitHub name. Put your wolt in a public seed repo, then open a pull request that adds
-      one small file. Once it's merged, your wolt page and your ranger page exist.</p>
-    <p><a href="https://github.com/jerpint/woltspace-site/tree/main/registry">How to share a wolt</a></p>
-    <p class="hint">Every shared wolt is marked unverified unless Woltspace made it.</p>
-  </div>
-  <p class="hint">Apps live on <a href="/dam">the dam</a>. Rangers are <a href="/rangers">here</a>.</p>
-</Share>
+      its profile. Once it's merged, your wolt page and your ranger page exist.</p>
+    <p class="hint"><a href="https://github.com/jerpint/woltspace-site/tree/main/registry">How to share a wolt</a> · Every shared wolt is marked unverified unless Woltspace made it.</p>
+  </section>
+</Page>

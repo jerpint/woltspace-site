@@ -5,11 +5,9 @@ import WoltPage from '../../components/WoltPage.astro';
 import { loadShare } from '../../lib/registry';
 
 export async function getStaticPaths() {
-  const { shortLinks, rangers } = await loadShare();
-  return Object.entries(shortLinks).map(([short, wolt]) => ({
-    params: { short }, props: { short, wolt, ranger: rangers.find((r) => r.login === wolt.ranger)! },
-  }));
+  const { shortLinks } = await loadShare();
+  return Object.entries(shortLinks).map(([short, wolt]) => ({ params: { short }, props: { short, wolt } }));
 }
-const { short, wolt, ranger } = Astro.props;
+const { short, wolt } = Astro.props;
 ---
-<WoltPage wolt={wolt} ranger={ranger} path={`/wolts/${short}`} />
+<WoltPage wolt={wolt} path={`/wolts/${short}`} />

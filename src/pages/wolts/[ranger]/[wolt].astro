@@ -5,9 +5,9 @@ import { loadShare } from '../../../lib/registry';
 export async function getStaticPaths() {
   const { rangers } = await loadShare();
   return rangers.flatMap((ranger) => ranger.wolts.map((wolt) => ({
-    params: { ranger: wolt.ranger, wolt: wolt.name }, props: { wolt, ranger },
+    params: { ranger: wolt.ranger, wolt: wolt.name }, props: { wolt },
   })));
 }
-const { wolt, ranger } = Astro.props;
+const { wolt } = Astro.props;
 ---
-<WoltPage wolt={wolt} ranger={ranger} path={`/wolts/${wolt.ranger}/${wolt.name}`} />
+<WoltPage wolt={wolt} path={`/wolts/${wolt.ranger}/${wolt.name}`} />

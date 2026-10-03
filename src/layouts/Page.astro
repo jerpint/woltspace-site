@@ -1,0 +1,265 @@
+---
+// The one shell and the one stylesheet for /wolts, /rangers and /dam.
+// It carries the lodge look from the home page: the pixel landscape, the paper
+// colours, the display and mono type, the footer line.
+import Scene from '../components/Scene.astro';
+import type { Critter } from '../lib/pixels';
+interface Props { title: string; description: string; path: string; canonical?: string; ogImage?: string; article?: boolean; critter?: Critter; wide?: boolean }
+const { title, description, path, canonical, ogImage, article = false, critter, wide = false } = Astro.props;
+const nav = [['wolts', '/wolts'], ['dam', '/dam'], ['docs', '/docs/getting-started/']];
+const site = 'https://woltspace.com';
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{title} | woltspace</title>
+  <meta name="description" content={description}>
+  <link rel="icon" href="/favicon.svg">
+  <link rel="canonical" href={site + (canonical ?? path)}>
+  <meta property="og:type" content={article ? 'article' : 'website'}>
+  <meta property="og:url" content={site + path}>
+  <meta property="og:title" content={title}>
+  <meta property="og:description" content={description}>
+  {ogImage && <meta property="og:image" content={site + ogImage}>}
+  {ogImage && <meta property="og:image:width" content="1200">}
+  {ogImage && <meta property="og:image:height" content="630">}
+  {ogImage && <meta name="twitter:card" content="summary_large_image">}
+  <script is:inline>
+    // Same light/dark choice as the rest of the site.
+    (function () {
+      var t = null;
+      try { t = localStorage.getItem('starlight-theme'); } catch (e) {}
+      if (t !== 'dark' && t !== 'light') t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      document.documentElement.dataset.theme = t;
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono&family=Preahvihear&display=swap" rel="stylesheet">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="/">woltspace</a>
+  <nav>{nav.map(([label, href]) => <a href={href} aria-current={path === href || path.startsWith(href + '/') ? 'page' : undefined}>{label}</a>)}</nav>
+</header>
+<Scene critter={critter} />
+<main class:list={[{ wide }]}>
+  <slot />
+</main>
+<footer class="foot">🦫 woltspace: give your wolt a lodge.</footer>
+<script is:inline>
+  document.querySelectorAll('[data-copy]').forEach((button) => button.addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(document.getElementById(button.dataset.copy).textContent); button.textContent = 'Copied'; }
+    catch { button.textContent = 'Select & copy'; }
+    setTimeout(() => { button.textContent = 'Copy'; }, 1500);
+  }));
+</script>
+</body>
+</html>
+
+<style is:global>
+  /* The lodge palette, same values as woltspace.css. */
+  :root { --bg: #EDE8DE; --well: #FAF7F0; --ink: #18100A; --soft: #5C4D3C; --faint: #9A8878; --line: #D6CCBA; --card: #F5F1E8; --accent: #C4531E; --green: #3A6644; --warn-bg: #FFF1C9; --warn-line: #D9A400; --warn-ink: #4A3500; --scene-dim: 1; }
+  :root[data-theme='dark'] { --bg: #1d150e; --well: #1d150e; --ink: #F5EFE4; --soft: #c2b39e; --faint: #8a7660; --line: #3a2d20; --card: #2a2016; --accent: #d96a31; --green: #6fa07c; --warn-bg: #3a2c05; --warn-line: #b88a00; --warn-ink: #ffe9a8; --scene-dim: .72; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.6 'DM Sans', sans-serif; }
+  main { max-width: 680px; margin: 0 auto; padding: 28px 16px 72px; }
+
+  .top { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px; background: var(--well); border-bottom: 1px solid var(--line); }
+  .top .brand { font-family: 'Preahvihear', sans-serif; font-size: 20px; color: var(--accent); text-decoration: none; }
+  .top nav { display: flex; gap: 14px; flex-wrap: wrap; justify-content: flex-end; }
+  .top nav a { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--soft); text-decoration: none; }
+  .top nav a:hover, .top nav a[aria-current] { color: var(--accent); }
+
+  .scene { --scene-h: clamp(96px, 15vw, 168px); position: relative; height: var(--scene-h); overflow: hidden; background-color: #B8D4E8; background-repeat: repeat-x; background-position: center top; background-size: auto 100%; image-rendering: pixelated; filter: brightness(var(--scene-dim)); }
+  .scene svg { display: block; width: 100%; height: auto; }
+  .scene-critter { position: absolute; left: max(16px, calc(50% - 324px)); }
+  .scene-cloud { position: absolute; left: 0; animation: cloud-drift linear infinite; }
+  .scene-cloud.c1 { top: 6%; animation-duration: 110s; animation-delay: -20s; }
+  .scene-cloud.c2 { top: 20%; animation-duration: 150s; animation-delay: -95s; }
+  .scene-cloud.c3 { top: 3%; animation-duration: 130s; animation-delay: -60s; }
+  @keyframes cloud-drift { from { transform: translateX(-200px); } to { transform: translateX(100vw); } }
+  @media (prefers-reduced-motion: reduce) { .scene-cloud { animation: none; } .scene-cloud.c1 { left: 58%; } .scene-cloud.c2 { left: 22%; } .scene-cloud.c3 { left: 82%; } }
+
+  .foot { border-top: 1px solid var(--line); padding: 24px 16px 40px; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--soft); }
+  a { color: var(--accent); }
+  .back { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--faint); overflow-wrap: anywhere; margin: 0; }
+  .back a { color: var(--faint); text-decoration: none; }
+  .back a:hover { text-decoration: underline; }
+  h1 { font-family: 'Preahvihear', sans-serif; font-weight: 400; font-size: 44px; line-height: 1.15; margin: 24px 0 4px; overflow-wrap: anywhere; }
+  .lead { color: var(--soft); margin: 0 0 16px; }
+  .part { font-family: 'Preahvihear', sans-serif; font-weight: 400; font-size: 26px; margin: 40px 0 12px; }
+  .paste { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px; margin-top: 16px; }
+  .paste p { margin: 0 0 12px; }
+  .paste ul { margin: 0; padding-left: 20px; }
+  .row { display: flex; gap: 8px; align-items: stretch; flex-wrap: wrap; }
+  code, .cmd { font-family: 'JetBrains Mono', monospace; font-size: 14px; }
+  .cmd { flex: 1 1 260px; background: var(--well); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; overflow-wrap: anywhere; }
+  button { font: 600 15px 'DM Sans', sans-serif; background: var(--accent); color: #fff; border: 0; border-radius: 10px; padding: 10px 18px; cursor: pointer; }
+  .hint { font-size: 14px; color: var(--soft); margin: 12px 0 0; }
+  .paste p.hint { margin: 12px 0 0; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 48px 0 32px; }
+
+  .title-row { display: flex; align-items: baseline; gap: 4px 12px; flex-wrap: wrap; }
+  .trust { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--green); white-space: nowrap; }
+  .trust.unverified { color: var(--warn-line); }
+  .person { display: grid; grid-template-columns: 44px 1fr auto; gap: 0 12px; align-items: center; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 10px 12px; margin: 0 0 24px; }
+  .person img { grid-row: 1 / span 2; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line); }
+  .person-name { font-weight: 600; color: var(--ink); text-decoration: none; overflow-wrap: anywhere; align-self: end; }
+  .person-name:hover { color: var(--accent); }
+  .person-sub { grid-column: 2; font-size: 13px; color: var(--soft); align-self: start; }
+  .person-stars { grid-column: 3; grid-row: 1 / span 2; font-size: 14px; color: var(--soft); text-decoration: none; border: 1px solid var(--line); border-radius: 10px; padding: 6px 10px; white-space: nowrap; }
+  .person-stars:hover { border-color: var(--accent); color: var(--accent); }
+  h1 + .person { margin-top: 16px; }
+  .badge { display: inline-block; font-size: 12px; font-weight: 600; border-radius: 99px; padding: 2px 10px; border: 1px solid var(--line); color: var(--soft); white-space: nowrap; }
+  .badge.ranger { background: var(--green); border-color: var(--green); color: #fff; }
+  :root[data-theme='dark'] .badge.ranger { color: #10200f; }
+  .badge.official { border-color: var(--green); color: var(--green); }
+  .badge.unverified { background: var(--warn-bg); border-color: var(--warn-line); color: var(--warn-ink); }
+
+  .warn { background: var(--warn-bg); border: 2px solid var(--warn-line); color: var(--warn-ink); border-radius: 14px; padding: 16px 18px; margin: 20px 0 8px; }
+  .warn strong { display: block; font-size: 18px; margin-bottom: 4px; }
+  .warn p { margin: 6px 0 0; }
+
+  .facts { width: 100%; border-collapse: collapse; font-size: 15px; }
+  .facts td { padding: 8px 0; border-bottom: 1px solid var(--line); vertical-align: top; overflow-wrap: anywhere; }
+  .facts td:first-child { color: var(--soft); width: 110px; padding-right: 12px; }
+
+  .list { list-style: none; padding: 0; margin: 0; }
+  .item { display: block; text-decoration: none; color: inherit; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; margin: 10px 0; }
+  a.item:hover { border-color: var(--accent); }
+  .item .top { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+  .item .name { font-weight: 600; font-size: 18px; overflow-wrap: anywhere; }
+  .item .name span { color: var(--soft); font-weight: 400; }
+  .item p { margin: 4px 0 0; color: var(--soft); font-size: 15px; }
+  .item .meta { font-size: 13px; color: var(--soft); margin-top: 8px; }
+  .empty { border: 1px dashed var(--line); border-radius: 14px; padding: 16px; color: var(--soft); font-size: 15px; }
+
+  .profile { display: flex; gap: 16px; align-items: center; margin: 24px 0 8px; }
+  .profile img { width: 84px; height: 84px; border-radius: 50%; border: 1px solid var(--line); }
+  .profile h1 { margin: 0 0 4px; font-size: 36px; }
+
+  .for-ai summary { cursor: pointer; list-style: none; display: flex; align-items: center; gap: 10px; }
+  .for-ai summary::-webkit-details-marker { display: none; }
+  .for-ai summary::after { content: '▸'; color: var(--soft); font-size: 20px; transition: transform .15s; }
+  .for-ai[open] summary::after { transform: rotate(90deg); }
+  .for-ai summary .part { margin: 0; }
+  .for-ai h3 { font-size: 19px; margin: 28px 0 8px; }
+  .for-ai blockquote { margin: 12px 0; padding: 8px 16px; border-left: 3px solid var(--warn-line); background: var(--card); border-radius: 0 10px 10px 0; }
+  .for-ai li { margin: 6px 0; overflow-wrap: anywhere; }
+
+  /* A wolt page, laid out like a model page on Hugging Face: one header block for the
+     wolt, tags, then the card with a side column (who shared it, the seed, source). */
+  main.wide { max-width: 980px; }
+  .wolt-head { display: grid; grid-template-columns: 72px 1fr auto; gap: 16px; align-items: center; margin: 20px 0 12px; }
+  .face { border-radius: 16px; background: var(--card); border: 1px solid var(--line); display: grid; place-items: center; flex: none; }
+  .face.large { width: 72px; height: 72px; padding: 10px; }
+  .face.small { width: 48px; height: 48px; padding: 7px; border-radius: 12px; }
+  .face svg { width: 100%; height: 100%; image-rendering: pixelated; }
+  .face.large span { font-size: 40px; line-height: 1; }
+  .face.small span { font-size: 26px; line-height: 1; }
+
+  /* Cards in a list: wolts, apps. Two columns when there is room. */
+  .cards { list-style: none; padding: 0; margin: 0 0 32px; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+  .card { display: flex; gap: 12px; align-items: flex-start; height: 100%; text-decoration: none; color: inherit; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px; }
+  .card:hover { border-color: var(--accent); }
+  .card-body { min-width: 0; }
+  .card-name { margin: 0; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--soft); overflow-wrap: anywhere; }
+  .card-name b { color: var(--ink); font-weight: 600; }
+  .card-line { margin: 2px 0 8px; font-size: 15px; color: var(--soft); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .card-meta { margin: 0; display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: center; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--faint); }
+  .card-meta .trust { font-size: 10px; }
+  .card-avatar { width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--line); flex: none; }
+  .side-cards { grid-template-columns: 1fr; margin-bottom: 24px; }
+  .share-yours p { margin: 0 0 8px; }
+
+  /* A list page: title, count, then cards. */
+  .list-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin: 20px 0 4px; }
+  .list-head h1 { margin: 0; }
+  .count { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--faint); }
+
+  /* A ranger page: the person on the side, what they shared in the main column. */
+  .ranger-grid { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 0 40px; align-items: start; margin-top: 20px; }
+  .ranger-card { display: flex; flex-direction: column; gap: 6px; }
+  .ranger-card img { width: 160px; height: 160px; border-radius: 50%; border: 1px solid var(--line); margin-bottom: 8px; }
+  .ranger-card h1 { margin: 0; font-size: 34px; }
+  .ranger-card .badge { align-self: flex-start; justify-self: start; }
+  .ranger-card .stats { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--soft); margin: 8px 0 0; }
+  .ranger-main .label { margin-top: 4px; }
+  @media (max-width: 760px) {
+    .ranger-grid { grid-template-columns: minmax(0, 1fr); }
+    .ranger-card { display: grid; grid-template-columns: 72px 1fr; gap: 0 14px; align-items: center; margin-bottom: 24px; }
+    .ranger-card img { width: 72px; height: 72px; margin: 0; grid-row: 1 / span 4; }
+    .ranger-card h1 { font-size: 28px; }
+    .ranger-card .stats { margin: 2px 0 0; }
+  }
+  .wolt-id { min-width: 0; }
+  .wolt-path { margin: 0; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--soft); overflow-wrap: anywhere; }
+  .wolt-path a { color: var(--soft); text-decoration: none; }
+  .wolt-path a:hover { color: var(--accent); }
+  .wolt-path b { color: var(--ink); font-weight: 600; }
+  .wolt-head h1 { margin: 0; font-size: 40px; line-height: 1.1; }
+  .wolt-role { margin: 2px 0 0; color: var(--soft); }
+  .wolt-stars { align-self: start; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 20px; padding-bottom: 20px; border-bottom: 1px solid var(--line); }
+  .tag, .tags .trust { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; letter-spacing: .04em; text-transform: none; color: var(--soft); background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 3px 8px; white-space: nowrap; }
+  .tags .trust { color: var(--green); border-color: var(--green); text-transform: uppercase; letter-spacing: .08em; }
+  .tags .trust.unverified { color: var(--warn-line); border-color: var(--warn-line); }
+  .label { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--faint); margin: 0 0 10px; }
+  .wolt-grid { margin-top: 4px; display: grid; grid-template-columns: minmax(0, 1fr) 280px; grid-template-areas: "desc side" "use side" "facts side"; gap: 0 32px; align-items: start; }
+  .wolt-desc { grid-area: desc; font-size: 18px; margin: 0 0 24px; }
+  .use { grid-area: use; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px; margin: 0 0 28px; }
+  .seg { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--line); margin: 0 0 14px; }
+  .seg button { background: transparent; color: var(--soft); border-radius: 0; border-bottom: 3px solid transparent; margin-bottom: -1px; padding: 8px 4px; font-size: 15px; }
+  .seg button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+  .use-k { margin: 0 0 8px; font-size: 14px; color: var(--soft); }
+  .use .cmd { overflow-wrap: break-word; word-break: normal; }
+  .use-foot { display: flex; gap: 12px; align-items: flex-start; justify-content: space-between; margin-top: 10px; }
+  .use-foot .hint { margin: 0; flex: 1; }
+  .use-foot button { flex: none; }
+  .facts-box { grid-area: facts; margin-bottom: 32px; }
+  .wolt-side { grid-area: side; display: flex; flex-direction: column; }
+  .wolt-side .person { margin: 0 0 24px; }
+  .side-list { list-style: none; padding: 0; margin: 0 0 24px; }
+  .side-list li { padding: 6px 0; border-bottom: 1px solid var(--line); }
+  .wolt-side > .hint, .side-src { margin: 0 0 24px; overflow-wrap: anywhere; }
+  .for-ai { border-top: 1px solid var(--line); padding-top: 24px; }
+  @media (max-width: 760px) {
+    .wolt-grid { grid-template-columns: minmax(0, 1fr); grid-template-areas: "desc" "use" "side" "facts"; }
+  }
+
+  /* Phones: fewer things competing. The header already says where you are, so the
+     breadcrumb goes; the banner, title, badges and boxes get smaller and quieter. */
+  @media (max-width: 560px) {
+    body { font-size: 16px; }
+    main { padding-top: 20px; }
+    .top { padding: 10px 16px; }
+    .top .brand { font-size: 18px; }
+    .top nav { gap: 10px; }
+    .top nav a { letter-spacing: .06em; }
+    .scene { --scene-h: 72px; }
+    .scene-cloud.c3 { display: none; }
+    .back { display: none; }
+    h1 { font-size: 34px; margin-top: 8px; }
+    .wolt-head { grid-template-columns: 56px 1fr auto; gap: 12px; margin-top: 4px; }
+    .face.large { width: 56px; height: 56px; padding: 7px; border-radius: 12px; }
+    .wolt-head h1 { font-size: 30px; }
+    .wolt-desc { font-size: 16px; }
+    .use { padding: 14px; }
+    .profile h1 { font-size: 30px; }
+    .profile img { width: 64px; height: 64px; }
+    .lead { margin-bottom: 12px; }
+    .person { margin-bottom: 18px; }
+    .badge { font-size: 11px; padding: 1px 8px; }
+    .warn { padding: 12px 14px; font-size: 15px; margin: 4px 0 16px; }
+    .warn strong { font-size: 16px; }
+    .paste { padding: 14px; }
+    .paste .row { flex-direction: column; }
+    .paste .cmd { flex-basis: auto; font-size: 13px; }
+    .use .cmd { font-size: 13px; }
+    .paste button { padding: 8px 14px; align-self: flex-start; }
+    .use-foot button { padding: 8px 14px; }
+    .part { font-size: 22px; margin-top: 32px; }
+  }
+</style>

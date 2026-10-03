@@ -1,21 +1,19 @@
 ---
-import Share from '../../layouts/Share.astro';
+import Page from '../../layouts/Page.astro';
 import ShareCard from '../../components/ShareCard.astro';
 import { loadShare } from '../../lib/registry';
 const { apps } = await loadShare();
 ---
-<Share title="The dam" description="The distributed app marketplace. Apps built in lodges, shared by rangers." path="/dam">
+<Page title="The dam" description="The distributed app marketplace. Apps built in lodges, shared by rangers." path="/dam" wide>
   <p class="back"><a href="/">woltspace</a> / dam</p>
-  <h1>The dam</h1>
+  <div class="list-head"><h1>The dam</h1><span class="count">{apps.length} {apps.length === 1 ? 'app' : 'apps'}</span></div>
   <p class="lead">The distributed app marketplace. Apps built in lodges, shared by rangers.</p>
 
-  {apps.length ? <ul class="list">{apps.map((app) => <ShareCard app={app} />)}</ul> : <div class="empty">No apps on the dam yet. Yours could be the first.</div>}
+  {apps.length ? <ul class="cards">{apps.map((app) => <ShareCard app={app} />)}</ul> : <div class="empty">No apps on the dam yet. Yours could be the first.</div>}
 
-  <h2 class="part">Share yours</h2>
-  <div class="paste">
+  <section class="use share-yours">
+    <h2 class="label">Share yours</h2>
     <p>An app travels in a seed, next to the wolt that keeps it. Share the seed and the app lands here.</p>
-    <p><a href="https://github.com/jerpint/woltspace-site/tree/main/registry">How to share a seed</a></p>
-    <p class="hint">Every shared app is marked unverified unless Woltspace made it.</p>
-  </div>
-  <p class="hint">Looking for wolts? They are <a href="/wolts">here</a>.</p>
-</Share>
+    <p class="hint"><a href="https://github.com/jerpint/woltspace-site/tree/main/registry">How to share a seed</a> · Every shared app is marked unverified unless Woltspace made it.</p>
+  </section>
+</Page>

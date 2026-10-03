@@ -1,0 +1,5 @@
+---
+// Next to a wolt's or app's name: made by Woltspace, or not checked by anyone.
+interface Props { verified: boolean }
+---
+{Astro.props.verified ? <span class="trust">✓ by Woltspace</span> : <span class="trust unverified">⚠ unverified</span>}

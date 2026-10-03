@@ -1,6 +1,13 @@
 ---
-import Share from '../../../layouts/Share.astro';
+// An app on the dam, laid out like a wolt page: the app's block, tags, then the
+// card with a side column (who shared it, the wolt that keeps it, the seed, source).
+import Page from '../../../layouts/Page.astro';
 import Warning from '../../../components/Warning.astro';
+import Byline from '../../../components/Byline.astro';
+import TrustMark from '../../../components/TrustMark.astro';
+import ItemFace from '../../../components/ItemFace.astro';
+import ShareCard from '../../../components/ShareCard.astro';
+import Cmd from '../../../components/Cmd.astro';
 import { loadShare } from '../../../lib/registry';
 
 export async function getStaticPaths() {
@@ -10,40 +17,63 @@ export async function getStaticPaths() {
   })));
 }
 const { app, ranger } = Astro.props;
-const heading = [app.name, app.emoji].filter(Boolean).join(' ');
 const keeper = ranger.wolts.find((wolt) => wolt.name === app.keeper);
+const others = ranger.apps.filter((a) => a.seed.repo === app.seed.repo && a.name !== app.name);
+const source = app.distribution === 'git' ? app.sourceUrl.replace('https://github.com/', '') : `${app.seed.ranger}/${app.seed.repo}`;
 ---
-<Share title={heading} description={app.description || `${app.name}, an app shared by ${app.ranger}.`} path={`/dam/${app.ranger}/${app.name}`}>
+<Page title={app.name} description={app.description || `${app.name}, an app shared by ${app.ranger}.`} path={`/dam/${app.ranger}/${app.name}`} critter={keeper && ['beaver', 'raccoon', 'otter'].includes(keeper.type) ? (keeper.type as any) : undefined} wide>
   <p class="back"><a href="/">woltspace</a> / <a href="/dam">dam</a> / <a href={`/rangers/${app.ranger}`}>{app.ranger}</a> / {app.name}</p>
 
   {!app.verified && <Warning kind="app" ranger={app.ranger} />}
 
-  <h1>{heading}</h1>
-  <p class="by">
-    <img src={`https://github.com/${app.ranger}.png?size=48`} alt="" width="24" height="24">
-    by <a href={`/rangers/${app.ranger}`}>{app.ranger}</a>
-    {ranger.badge && <span class="badge ranger">🌲 {ranger.badge}</span>}
-    {app.verified ? <span class="badge official">by Woltspace</span> : <span class="badge unverified">unverified</span>}
-    {app.seed.stars !== null && <a href={app.seed.url}>★ {app.seed.stars}</a>}
+  <header class="wolt-head">
+    <ItemFace emoji={app.emoji || '📦'} />
+    <div class="wolt-id">
+      <p class="wolt-path"><a href={`/rangers/${app.ranger}`}>{app.ranger}</a> / <b>{app.name}</b></p>
+      <h1>{app.name}</h1>
+      <p class="wolt-role">An app on the dam</p>
+    </div>
+    {app.seed.stars !== null && <a class="person-stars wolt-stars" href={app.seed.url} title="Stars on GitHub">★ {app.seed.stars}</a>}
+  </header>
+  <p class="tags">
+    <TrustMark verified={app.verified} />
+    {app.stack && <span class="tag">{app.stack}</span>}
+    {app.keeper && <span class="tag">kept by {app.keeper}</span>}
+    <span class="tag">seed · {app.seed.repo}</span>
   </p>
 
-  {app.description && <p>{app.description}</p>}
+  <div class="wolt-grid">
+    {app.description && <p class="wolt-desc">{app.description}</p>}
 
-  <div class="paste">
-    <p><strong>Add it to your lodge.</strong> Already have Woltspace? Run:</p>
-    <div class="row">
-      <div class="cmd" id="seed">woltspace seed install {app.seed.gitUrl}</div>
-      <button type="button" data-copy="seed">Copy</button>
-    </div>
-    <p class="hint">An app is a program that runs on your computer. This installs the whole seed, including the wolt that keeps the app.</p>
+    <section class="use">
+      <h2 class="label">Use {app.name}</h2>
+      <p class="use-k">Already have Woltspace? Run in your lodge:</p>
+      <Cmd id="seed" text={`woltspace seed install ${app.seed.gitUrl}`} />
+      <div class="use-foot">
+        <p class="hint">An app is a program that runs on your computer. This installs the whole seed, including the wolt that keeps it.</p>
+        <button type="button" data-copy="seed">Copy</button>
+      </div>
+    </section>
+
+    <aside class="wolt-side">
+      <h2 class="label">Shared by</h2>
+      <Byline login={app.ranger} />
+      {keeper && <h2 class="label">Kept by</h2>}
+      {keeper && <ul class="cards side-cards"><ShareCard wolt={keeper} showRanger={false} /></ul>}
+      {others.length > 0 && <h2 class="label">In the same seed</h2>}
+      {others.length > 0 && <ul class="side-list">{others.map((a) => <li><a href={`/dam/${a.ranger}/${a.name}`}>{a.name}</a> <span class="hint">app</span></li>)}</ul>}
+      <h2 class="label">Source</h2>
+      <p class="side-src"><a href={app.sourceUrl}>{source}</a></p>
+    </aside>
+
+    <section class="facts-box">
+      <h2 class="label">What you're getting</h2>
+      <table class="facts">
+        {app.stack && <tr><td>Stack</td><td>{app.stack}</td></tr>}
+        {app.start && <tr><td>It runs</td><td><code>{app.start}</code></td></tr>}
+        {app.keeper && <tr><td>Kept by</td><td>{keeper ? <a href={`/wolts/${keeper.ranger}/${keeper.name}`}>{keeper.name}</a> : app.keeper}</td></tr>}
+        <tr><td>Profile</td><td>as reviewed when it was shared{!app.verified && '. The app itself lives in their repo and can change at any time.'}</td></tr>
+      </table>
+    </section>
   </div>
-
-  <h2 class="part">What you're getting</h2>
-  <table class="facts">
-    {app.stack && <tr><td>Stack</td><td>{app.stack}</td></tr>}
-    {app.start && <tr><td>It runs</td><td><code>{app.start}</code></td></tr>}
-    {app.keeper && <tr><td>Kept by</td><td>{keeper ? <a href={`/wolts/${keeper.ranger}/${keeper.name}`}>{keeper.name}</a> : app.keeper}</td></tr>}
-    <tr><td>Source</td><td><a href={app.sourceUrl}>{app.sourceUrl.replace('https://github.com/', '')}</a></td></tr>
-    <tr><td>Profile</td><td>as reviewed when it was shared{!app.verified && '. The app itself lives in their repo and can change at any time.'}</td></tr>
-  </table>
-</Share>
+</Page>
