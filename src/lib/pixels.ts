@@ -83,3 +83,24 @@ export const clouds = [
   sprite(['....OOO...OOO......', '...OwWwOOOwWwO.....', '..OwWWWwOwWWWwO....', '.OOwWWWWwwWWWWwOO..', '.OwwWWWWWWWWWWWwO..', '.OwWWWWWWWWWWWWwO..', '.OwwWWWWWWWWWWwwO..', '.OssssssssssssssO..', '..OOOOOOOOOOOOOO...'], cloudPalette),
   sprite(['...OOO..OOO....', '..OwWwOOwWwO...', '.OwWWWwwWWWwO..', '.OwwWWWWWWwwO..', '.OwWWWWWWWWwO..', '.OwwWWWWWWwwO..', '.OssssssssssO..', '..OOOOOOOOOO...'], cloudPalette),
 ];
+
+// The right-hand art of a share card (516x630): a close-up of the landscape
+// with the critter (if we draw that creature) on the bank. Scene and critter
+// share one grid, 15px per pixel (the landscape's 42 rows fill the 630px), and
+// a few highlights sparkle on the river. Drawn as rects at the final size, so it
+// stays crisp without scaling.
+export function cardSceneSvg(critter?: Critter, firstCol = 90): string {
+  const width = 516, height = 630, px = height / H, cols = Math.ceil(width / px);
+  const view = `${firstCol * S} 0 ${(width / px) * S} ${H * S}`;
+  const scene = sceneSvg(firstCol + cols)
+    .replace(/^<svg([^>]*)>/, (_, attrs: string) => `<svg${attrs.replace(/\s(width|height|viewBox)="[^"]*"/g, '')} viewBox="${view}" width="${width}" height="${height}">`);
+  const sparkles = [[3, RIVER + 1], [9, RIVER + 2], [16, RIVER + 1], [22, RIVER + 2], [28, RIVER + 1], [6, RIVER + 4], [19, RIVER + 4], [31, RIVER + 3]]
+    .map(([x, y]) => `<rect x="${x * px}" y="${y * px}" width="${px}" height="${px}" fill="#9CCBE6"/>`).join('');
+  let who = '';
+  if (critter && critters[critter]) {
+    const { svg, cols: w, rows: h } = critters[critter];
+    // Feet two pixels into the bank, a little left of centre.
+    who = svg.replace(/^<svg([^>]*)>/, (_, attrs: string) => `<svg${attrs} x="${8 * px}" y="${(BANK + 2 - h) * px}" width="${w * px}" height="${h * px}">`);
+  }
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" shape-rendering="crispEdges">${scene}${sparkles}${who}</svg>`;
+}
