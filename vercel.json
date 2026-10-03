@@ -1,3 +1,15 @@
 {
-  "framework": "astro"
+  "framework": "astro",
+  "redirects": [
+    {
+      "source": "/wolts/jerpint/:path*",
+      "destination": "/jerpint/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/rangers/jerpint",
+      "destination": "/jerpint",
+      "permanent": true
+    }
+  ]
 }

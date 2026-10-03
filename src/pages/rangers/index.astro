@@ -1,6 +1,6 @@
 ---
 import Page from '../../layouts/Page.astro';
-import { loadShare } from '../../lib/registry';
+import { loadShare, rangerPath } from '../../lib/registry';
 const { rangers } = await loadShare();
 const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
 ---
@@ -10,7 +10,7 @@ const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
   <p class="lead">The people who share wolts and apps. A ranger is a GitHub account.</p>
   <ul class="cards">
     {rangers.map((ranger) => (
-      <li><a class="card" href={`/rangers/${ranger.login}`}>
+      <li><a class="card" href={rangerPath(ranger.login)}>
         <img class="card-avatar" src={`https://github.com/${ranger.login}.png?size=96`} alt="" width="48" height="48">
         <div class="card-body">
           <p class="card-name"><b>{ranger.login}</b></p>

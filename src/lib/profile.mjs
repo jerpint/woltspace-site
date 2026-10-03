@@ -11,6 +11,10 @@
 export const LOGIN_RE = /^[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})$/;
 export const REPO_RE = /^[A-Za-z0-9._-]{1,100}$/;
 export const NAME_RE = /^[a-z0-9][a-z0-9_-]{0,63}$/;
+// Rangers live at woltspace.com/<ranger>, so a ranger cannot take the name of a
+// page or folder of the site itself.
+export const RESERVED = ['404', 'about', 'api', 'apps', 'blog', 'dam', 'docs', 'index', 'media', 'pagefind', 'rangers', 'search', 'talk', 'wolts'];
+export const isReserved = (login) => RESERVED.includes(String(login).toLowerCase());
 export const LIMITS = { seedsPerRanger: 10, woltsPerSeed: 25, appsPerSeed: 25, skills: 30 };
 const TEXT = { type: 20, role: 80, description: 400, emoji: 8, stack: 40, start: 300, keeper: 64, distribution: 10, sourceUrl: 300 };
 const TYPES = ['otter', 'beaver', 'raccoon', 'wolf', 'dog'];

@@ -2,11 +2,11 @@
 // Who made it: a small card about the person. GitHub picture, name, ranger
 // badge. Used on wolt pages and app pages.
 // Whether the thing itself is trusted goes next to its title (TrustMark).
-import { rangerOf } from '../lib/registry';
+import { rangerOf, rangerPath } from '../lib/registry';
 interface Props { login: string }
 const { login } = Astro.props;
 const ranger = await rangerOf(login);
-const href = ranger.hasPage ? `/rangers/${ranger.login}` : `https://github.com/${ranger.login}`;
+const href = ranger.hasPage ? rangerPath(ranger.login) : `https://github.com/${ranger.login}`;
 const sub = ranger.badge ? `🌲 ${ranger.badge}` : ranger.hasPage ? 'Ranger' : 'on GitHub';
 ---
 <div class="person">
