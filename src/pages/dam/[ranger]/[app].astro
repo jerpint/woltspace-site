@@ -44,6 +44,6 @@ const keeper = ranger.wolts.find((wolt) => wolt.name === app.keeper);
     {app.start && <tr><td>It runs</td><td><code>{app.start}</code></td></tr>}
     {app.keeper && <tr><td>Kept by</td><td>{keeper ? <a href={`/wolts/${keeper.ranger}/${keeper.name}`}>{keeper.name}</a> : app.keeper}</td></tr>}
     <tr><td>Source</td><td><a href={app.sourceUrl}>{app.sourceUrl.replace('https://github.com/', '')}</a></td></tr>
-    <tr><td>Updated</td><td>{app.seed.updated ? `${app.seed.updated} · ` : ''}follows the repo{!app.verified && ', so it can change at any time'}</td></tr>
+    <tr><td>Profile</td><td>as reviewed when it was shared{!app.verified && '. The app itself lives in their repo and can change at any time.'}</td></tr>
   </table>
 </Share>

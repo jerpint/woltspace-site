@@ -1,18 +1,18 @@
-// Shared wolts and apps. registry/<ranger>/<repo>.json names a seed repo and
-// the wolts and apps in it that may be shown; seeds.mjs reads them when the
-// site builds. A new wolt appears only when a pull request lists it. Nothing is
-// pinned: a listed wolt's page follows its repo, as of the last build.
+// Shared wolts and apps. Each registry/<ranger>/<repo>.json holds the profiles
+// of the wolts and apps shown from that seed, exactly as merged. The build
+// reads only those files: an edit in someone's repo changes nothing here until
+// a pull request brings it in. Only GitHub stars are fetched at build time.
+import fs from 'node:fs';
+import path from 'node:path';
 import rangerExtras from '../data/rangers.json';
 import shortLinkData from '../data/short-links.json';
-import { readSeeds } from './seeds.mjs';
+import { checkEntry, LOGIN_RE, REPO_RE, NAME_RE, LIMITS } from './profile.mjs';
 
-const LOGIN_RE = /^[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})$/;
-const REPO_RE = /^[A-Za-z0-9._-]{1,100}$/;
-const NAME_RE = /^[a-z0-9][a-z0-9_-]{0,63}$/;
+const REGISTRY_DIR = path.resolve(process.env.REGISTRY_DIR || 'registry');
 const EMOJI: Record<string, string> = { otter: '🦦', beaver: '🦫', raccoon: '🦝', wolf: '🐺', dog: '🐶' };
 
 export interface Ranger { login: string; badge: string | null; verified: boolean; wolts: Wolt[]; apps: App[] }
-export interface Seed { ranger: string; repo: string; url: string; gitUrl: string; stars: number | null; updated: string | null }
+export interface Seed { ranger: string; repo: string; url: string; gitUrl: string; stars: number | null }
 export interface Wolt {
   ranger: string; name: string; title: string; type: string; emoji: string; role: string; description: string;
   skills: string[]; seed: Seed; verified: boolean; identityUrl: string; treeUrl: string; siblings: string[]; apps: string[];
@@ -25,18 +25,47 @@ export interface Share { rangers: Ranger[]; wolts: Wolt[]; apps: App[]; shortLin
 
 const title = (name: string) => name.charAt(0).toUpperCase() + name.slice(1);
 
+// Stars are the one live number; a failure here never drops a page.
+async function stars(owner: string, repo: string): Promise<number | null> {
+  if (process.env.SEED_FIXTURES) return null;
+  try {
+    const headers: Record<string, string> = { accept: 'application/vnd.github+json' };
+    if (process.env.GITHUB_TOKEN) headers.authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
+    const response = await fetch(`https://api.github.com/repos/${owner}/${repo}`, { headers, signal: AbortSignal.timeout(15000) });
+    return response.ok ? (await response.json()).stargazers_count ?? null : null;
+  } catch {
+    return null;
+  }
+}
+
+function registryFiles(): { ranger: string; repo: string; raw: unknown }[] {
+  if (!fs.existsSync(REGISTRY_DIR)) return [];
+  const out = [];
+  for (const ranger of fs.readdirSync(REGISTRY_DIR).sort()) {
+    const dir = path.join(REGISTRY_DIR, ranger);
+    if (!LOGIN_RE.test(ranger) || !fs.statSync(dir).isDirectory()) continue;
+    const repos = fs.readdirSync(dir).filter((f) => f.endsWith('.json')).map((f) => f.slice(0, -5)).filter((r) => REPO_RE.test(r)).sort();
+    for (const repo of repos.slice(0, LIMITS.seedsPerRanger)) {
+      try { out.push({ ranger, repo, raw: JSON.parse(fs.readFileSync(path.join(dir, `${repo}.json`), 'utf8')) }); }
+      catch { console.warn(`registry: ${ranger}/${repo}.json is not valid JSON, skipped`); }
+    }
+  }
+  return out;
+}
+
 async function load(): Promise<Share> {
   const extras = rangerExtras as Record<string, { badge?: string; verified?: boolean }>;
   const rangers = new Map<string, Ranger>();
 
-  for (const data of await readSeeds()) {
-    if (!LOGIN_RE.test(data?.ranger ?? '') || !REPO_RE.test(data?.repo ?? '')) continue;
-    const { ranger, repo } = data;
+  for (const { ranger, repo, raw } of registryFiles()) {
+    const { entry: data, errors } = checkEntry(raw, ranger, repo);
+    for (const error of errors) console.warn(`registry: ${ranger}/${repo}: ${error}`);
+    if (!data.repo) continue;
     const extra = extras[ranger.toLowerCase()] ?? {};
     if (!rangers.has(ranger)) rangers.set(ranger, { login: ranger, badge: extra.badge ?? null, verified: extra.verified === true, wolts: [], apps: [] });
     const entry = rangers.get(ranger)!;
     const url = `https://github.com/${ranger}/${repo}`;
-    const seed: Seed = { ranger, repo, url, gitUrl: `${url}.git`, stars: data.stars ?? null, updated: data.updated ?? null };
+    const seed: Seed = { ranger, repo, url, gitUrl: `${url}.git`, stars: await stars(ranger, repo) };
     const woltData = (data.wolts ?? []).filter((w: any) => NAME_RE.test(w?.name ?? ''));
     const appData = (data.apps ?? []).filter((a: any) => NAME_RE.test(a?.name ?? ''));
     const woltNames: string[] = woltData.map((w: any) => w.name);

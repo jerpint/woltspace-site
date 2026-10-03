@@ -56,7 +56,7 @@ const extras = [...wolt.siblings.map((n) => `wolt ${n}`), ...wolt.apps.map((n) =
       <tr><td>Skills</td><td>{wolt.skills.length ? wolt.skills.map((s, i) => <>{i > 0 && ', '}<code>{s}</code></>) : 'none'}</td></tr>
       <tr><td>Same seed</td><td>{extras.length ? extras.join(', ') : 'nothing else'}</td></tr>
       <tr><td>Source</td><td><a href={wolt.treeUrl}>{wolt.seed.ranger}/{wolt.seed.repo}</a></td></tr>
-      <tr><td>Updated</td><td>{wolt.seed.updated ? `${wolt.seed.updated} · ` : ''}follows the repo{!wolt.verified && ', so it can change at any time'}</td></tr>
+      <tr><td>Profile</td><td>as reviewed when it was shared{!wolt.verified && '. The wolt itself lives in their repo and can change at any time.'}</td></tr>
     </table>
   </section>
 

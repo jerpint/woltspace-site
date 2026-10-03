@@ -1,7 +1,15 @@
 {
   "repo": "jerpint/woltspace-starter-lodge",
   "wolts": [
-    "onboardie"
+    {
+      "name": "onboardie",
+      "type": "beaver",
+      "role": "Onboarding guide",
+      "description": "Finds out what you came for, explains how woltspace works, and helps you make your first wolts.",
+      "skills": [
+        "onboardie-chat"
+      ]
+    }
   ],
   "apps": []
 }
