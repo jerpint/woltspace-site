@@ -1,10 +1,9 @@
 name: registry
 
+# Runs on every pull request. The rules (the check script) come from the base
+# branch, so a pull request cannot change the rules it is checked against.
 on:
   pull_request:
-    paths:
-      - 'registry/**'
-      - 'src/data/**'
 
 permissions:
   contents: read
@@ -13,16 +12,26 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: The pull request
+        uses: actions/checkout@v4
         with:
+          path: pr
           fetch-depth: 0
+      - name: The rules, from the base branch
+        uses: actions/checkout@v4
+        with:
+          path: rules
+          ref: ${{ github.event.pull_request.base.sha }}
       - uses: actions/setup-node@v4
         with:
           node-version: 22
       - name: Check the registry
+        working-directory: pr
         env:
           PR_AUTHOR: ${{ github.event.pull_request.user.login }}
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: |
           export CHANGED_FILES="$(git diff --name-only "$BASE_SHA"...HEAD)"
-          node scripts/check-registry.mjs
+          # Until the base branch has the check, use the pull request's own.
+          if [ -f ../rules/scripts/check-registry.mjs ]; then RULES=../rules; else RULES=.; fi
+          node "$RULES/scripts/check-registry.mjs"
