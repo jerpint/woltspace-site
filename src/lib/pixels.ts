@@ -83,3 +83,22 @@ export const clouds = [
   sprite(['....OOO...OOO......', '...OwWwOOOwWwO.....', '..OwWWWwOwWWWwO....', '.OOwWWWWwwWWWWwOO..', '.OwwWWWWWWWWWWWwO..', '.OwWWWWWWWWWWWWwO..', '.OwwWWWWWWWWWWwwO..', '.OssssssssssssssO..', '..OOOOOOOOOOOOOO...'], cloudPalette),
   sprite(['...OOO..OOO....', '..OwWwOOwWwO...', '.OwWWWwwWWWwO..', '.OwwWWWWWWwwO..', '.OwWWWWWWWWwO..', '.OwwWWWWWWwwO..', '.OssssssssssO..', '..OOOOOOOOOO...'], cloudPalette),
 ];
+
+// A 1200x630 share picture: the landscape, with the critter (if we draw that
+// creature) standing on the bank. No text: chat apps print the title and
+// description under the picture.
+export function ogSvg(critter?: Critter): string {
+  const width = 1200, height = 630;
+  // Place a whole <svg> inside the picture: drop its own size, give it ours.
+  const place = (svg: string, x: number, y: number, w: number, h: number) =>
+    svg.replace(/^<svg([^>]*)>/, (_, attrs: string) => `<svg${attrs.replace(/\s(width|height)="[^"]*"/g, '')} x="${x}" y="${y}" width="${w}" height="${h}">`);
+  const scene = place(sceneSvg(80), 0, 0, width, height);
+  let who = '';
+  if (critter && critters[critter]) {
+    const { svg, cols, rows } = critters[critter];
+    const px = Math.floor(220 / rows), w = cols * px, h = rows * px;
+    const bank = Math.round((BANK / H) * height);
+    who = place(svg, Math.round((width - w) / 2), bank - h + px * 2, w, h);
+  }
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" shape-rendering="crispEdges">${scene}${who}</svg>`;
+}
