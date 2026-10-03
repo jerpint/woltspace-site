@@ -47,7 +47,7 @@ const site = 'https://woltspace.com';
 <main class:list={[{ wide }]}>
   <slot />
 </main>
-<footer class="foot">🦫 woltspace: give your wolt a lodge.</footer>
+<footer class="foot">🦫 gnaw. build. repeat.</footer>
 <script is:inline>
   document.querySelectorAll('[data-copy]').forEach((button) => button.addEventListener('click', async () => {
     try { await navigator.clipboard.writeText(document.getElementById(button.dataset.copy).textContent); button.textContent = 'Copied'; }
