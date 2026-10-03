@@ -1,6 +1,6 @@
 ---
-// One template for every shared wolt. `path` is the address this copy is served
-// at: /wolts/<ranger>/<wolt>, or a short link like /wolts/onboardie.
+// One template for every shared wolt. Served at /wolts/<ranger>/<wolt>.
+// Short links like /wolts/onboardie are redirects in vercel.json.
 import fs from 'node:fs';
 import Page from '../layouts/Page.astro';
 import Warning from './Warning.astro';
@@ -16,7 +16,7 @@ const { wolt, path } = Astro.props;
 const canonical = `/wolts/${wolt.ranger}/${wolt.name}`;
 const pageUrl = `https://woltspace.com${path}`;
 const heading = [wolt.title, wolt.emoji].filter(Boolean).join(' ');
-const ogImage = fs.existsSync(`public/wolts/${wolt.name}/og.png`) && path === `/wolts/${wolt.name}` ? `/wolts/${wolt.name}/og.png` : undefined;
+const ogImage = fs.existsSync(`public/wolts/${wolt.name}/og.png`) ? `/wolts/${wolt.name}/og.png` : undefined;
 const critter = wolt.type in critters ? (wolt.type as Critter) : undefined;
 const extras = [...wolt.siblings.map((n) => `wolt ${n}`), ...wolt.apps.map((n) => `app ${n}`)];
 const skillCount = `${wolt.skills.length} ${wolt.skills.length === 1 ? 'skill' : 'skills'}`;

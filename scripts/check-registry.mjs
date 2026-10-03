@@ -30,7 +30,7 @@ if (author && !MAINTAINERS.includes(author.toLowerCase())) {
     const own = parts[0] === 'registry' && parts.length === 3 && parts[1].toLowerCase() === author.toLowerCase();
     if (parts[0] === 'registry' && parts[1] !== 'README.md' && !own) errors.push(`${file}: @${author} can only change registry/${author}/`);
     if (parts[0] === 'registry' && parts[1] === 'README.md') errors.push(`${file}: only maintainers change this file`);
-    if (file.startsWith('src/data/')) errors.push(`${file}: badges and short links are handed out by Woltspace`);
+    if (file.startsWith('src/data/') || file === 'vercel.json') errors.push(`${file}: badges and short links are handed out by Woltspace`);
   }
 }
 

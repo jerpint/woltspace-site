@@ -5,7 +5,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import rangerExtras from '../data/rangers.json';
-import shortLinkData from '../data/short-links.json';
 import { checkEntry, LOGIN_RE, REPO_RE, NAME_RE, LIMITS } from './profile.mjs';
 
 const REGISTRY_DIR = path.resolve(process.env.REGISTRY_DIR || 'registry');
@@ -21,7 +20,7 @@ export interface App {
   ranger: string; name: string; emoji: string; description: string; stack: string; start: string;
   keeper: string; distribution: string; sourceUrl: string; seed: Seed; verified: boolean;
 }
-export interface Share { rangers: Ranger[]; wolts: Wolt[]; apps: App[]; shortLinks: Record<string, Wolt> }
+export interface Share { rangers: Ranger[]; wolts: Wolt[]; apps: App[] }
 
 const title = (name: string) => name.charAt(0).toUpperCase() + name.slice(1);
 
@@ -95,13 +94,7 @@ async function load(): Promise<Share> {
 
   const all = [...rangers.values()].filter((r) => r.wolts.length || r.apps.length);
   const wolts = all.flatMap((r) => r.wolts);
-  const shortLinks: Record<string, Wolt> = {};
-  for (const [short, target] of Object.entries(shortLinkData as Record<string, string>)) {
-    const wolt = wolts.find((w) => `${w.ranger}/${w.name}`.toLowerCase() === target.toLowerCase());
-    if (wolt && NAME_RE.test(short)) shortLinks[short] = wolt;
-    else console.warn(`registry: short link ${short} points to nothing (${target})`);
-  }
-  return { rangers: all, wolts, apps: all.flatMap((r) => r.apps), shortLinks };
+  return { rangers: all, wolts, apps: all.flatMap((r) => r.apps) };
 }
 
 // Who a GitHub name is here: badge, verified, and whether they have a ranger page.

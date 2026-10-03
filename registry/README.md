@@ -45,7 +45,7 @@ request that adds its name to your file. Once merged, its page appears.
 - Every shared wolt and app is shown as **unverified third party**, with a
   warning, unless Woltspace made it.
 - Badges (`src/data/rangers.json`) and short links like `/wolts/onboardie`
-  (`src/data/short-links.json`) are handed out by Woltspace.
+  (redirects in `vercel.json`) are handed out by Woltspace.
 - To take something down, remove its name or your file in a pull request, or
   make the repo private. Woltspace can remove any entry.
 
