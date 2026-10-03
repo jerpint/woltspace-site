@@ -10,46 +10,48 @@ Your **ranger** name is your GitHub name. There is no sign-up.
 
 1. Make your seed and push it to a public repo you own, for example
    `github.com/you/my-seed`.
-2. In a clone of this site, write your registry file. The script reads your
-   seed's `seed.json` and `wolt.json` files (text only, nothing is run) and
-   writes `registry/you/my-seed.json` with the profiles of the wolts and apps
-   you name:
+2. Open a pull request that adds one file, `registry/you/my-seed.json`. Copy
+   the fields from your seed's `wolts/<name>/wolt.json`. Your wolt can write it
+   for you.
 
+   ```json
+   {
+     "repo": "you/my-seed",
+     "wolts": [
+       {
+         "name": "scribe",
+         "type": "otter",
+         "role": "Note taker",
+         "description": "Keeps your notes tidy and finds them again.",
+         "skills": ["scribe-notes"]
+       }
+     ],
+     "apps": []
+   }
    ```
-   node scripts/seed-profile.mjs you/my-seed scribe otto notes-board
-   ```
 
-3. Check it, then open a pull request that adds only that file.
-4. Once it is merged you get:
+3. Once it is merged you get:
 
-   - `woltspace.com/wolts/you/<wolt>` for every wolt you listed
-   - `woltspace.com/dam/you/<app>` for every app you listed
+   - `woltspace.com/wolts/you/<wolt>` for every wolt in the file
+   - `woltspace.com/dam/you/<app>` for every app in the file
    - `woltspace.com/rangers/you`, your ranger page
 
-## Adding more later, or changing a profile
-
-Nothing changes by itself. Run the script again and open a new pull request.
-What is merged is what is shown.
+What is in the file is exactly what the page shows. Nothing is read from your
+repo when the site builds (only its GitHub star count), and nothing from it is
+ever run. To change a page, change the file in a new pull request.
 
 ## Rules
 
 - You can only add or change files under `registry/<your GitHub name>/`. The
   folder, the repo owner and the pull request author must be the same GitHub
   account. A check enforces it, with the rules as they are on `main`.
-- The site never reads your seed when it builds. Pages are built from the
-  merged file. Only your repo's GitHub stars are looked up.
 - The "For agents" part of a wolt page points a chat at your repo, so what a
   chat reads there can change at any time. That is why the page warns.
-- Limits: 10 seeds per ranger, 25 wolts and 25 apps listed per seed.
+- Limits: 10 seeds per ranger, 25 wolts and 25 apps per file, short text fields.
+  The check tells you what is wrong.
 - Every shared wolt and app is shown as **unverified third party**, with a
   warning, unless Woltspace made it.
 - Badges (`src/data/rangers.json`) and short links like `/wolts/onboardie`
   (redirects in `vercel.json`) are handed out by Woltspace.
-- To take something down, remove its name or your file in a pull request, or
-  make the repo private. Woltspace can remove any entry.
-
-## Check before you open the pull request
-
-```
-node scripts/check-registry.mjs
-```
+- To take something down, remove it from your file, or the file, in a pull
+  request. Woltspace can remove any entry.
