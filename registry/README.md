@@ -50,8 +50,7 @@ ask GitHub for its star count.) To change a page, change the file in a new pull 
 - Limits: 10 seeds per ranger, 25 wolts and 25 apps per file, short text fields.
 - Every shared wolt and app is shown as **unverified third party**, with a
   warning, unless Woltspace made it.
-- Badges (`src/data/rangers.json`) and short links like `/wolts/onboardie`
-  (redirects in `vercel.json`) are handed out by Woltspace.
+- Badges (`src/data/rangers.json`) are handed out by Woltspace.
 - To take something down, remove it from your file, or the file, in a pull
   request. Woltspace can remove any entry.
 

@@ -2,16 +2,6 @@
   "framework": "astro",
   "redirects": [
     {
-      "source": "/wolts/onboardie",
-      "destination": "/wolts/jerpint/onboardie",
-      "permanent": true
-    },
-    {
-      "source": "/wolts/onboardie/",
-      "destination": "/wolts/jerpint/onboardie",
-      "permanent": true
-    },
-    {
       "source": "/directory",
       "destination": "/wolts",
       "permanent": true
