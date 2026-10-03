@@ -1,6 +1,6 @@
 // The share card of every shared wolt, drawn at build time (lib/share-card.ts).
-import { loadShare } from '../../../../lib/registry';
-import { shareCard } from '../../../../lib/share-card';
+import { loadShare } from '../../../lib/registry';
+import { shareCard } from '../../../lib/share-card';
 
 export async function getStaticPaths() {
   const { wolts } = await loadShare();

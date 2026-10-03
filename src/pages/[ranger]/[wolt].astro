@@ -1,6 +1,6 @@
 ---
-import WoltPage from '../../../components/WoltPage.astro';
-import { loadShare } from '../../../lib/registry';
+import WoltPage from '../../components/WoltPage.astro';
+import { loadShare, woltPath } from '../../lib/registry';
 
 export async function getStaticPaths() {
   const { rangers } = await loadShare();
@@ -10,4 +10,4 @@ export async function getStaticPaths() {
 }
 const { wolt } = Astro.props;
 ---
-<WoltPage wolt={wolt} path={`/wolts/${wolt.ranger}/${wolt.name}`} />
+<WoltPage wolt={wolt} path={woltPath(wolt.ranger, wolt.name)} />

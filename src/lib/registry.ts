@@ -6,7 +6,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import rangerExtras from '../data/rangers.json';
-import { checkEntry, LOGIN_RE, REPO_RE, NAME_RE, LIMITS } from './profile.mjs';
+import { checkEntry, isReserved, LOGIN_RE, REPO_RE, NAME_RE, LIMITS } from './profile.mjs';
 
 const REGISTRY_DIR = path.resolve(process.env.REGISTRY_DIR || 'registry');
 const EMOJI: Record<string, string> = { otter: '🦦', beaver: '🦫', raccoon: '🦝', wolf: '🐺', dog: '🐶' };
@@ -23,6 +23,10 @@ export interface App {
 }
 export interface Share { rangers: Ranger[]; wolts: Wolt[]; apps: App[] }
 
+// Where things live: woltspace.com/<ranger> and woltspace.com/<ranger>/<wolt>.
+export const rangerPath = (ranger: string) => `/${ranger}`;
+export const woltPath = (ranger: string, wolt: string) => `/${ranger}/${wolt}`;
+
 const title = (name: string) => name.charAt(0).toUpperCase() + name.slice(1);
 
 function registryFiles(): { ranger: string; repo: string; raw: unknown }[] {
@@ -30,7 +34,7 @@ function registryFiles(): { ranger: string; repo: string; raw: unknown }[] {
   const out = [];
   for (const ranger of fs.readdirSync(REGISTRY_DIR).sort()) {
     const dir = path.join(REGISTRY_DIR, ranger);
-    if (!LOGIN_RE.test(ranger) || !fs.statSync(dir).isDirectory()) continue;
+    if (!LOGIN_RE.test(ranger) || isReserved(ranger) || !fs.statSync(dir).isDirectory()) continue;
     const repos = fs.readdirSync(dir).filter((f) => f.endsWith('.json')).map((f) => f.slice(0, -5)).filter((r) => REPO_RE.test(r)).sort();
     for (const repo of repos.slice(0, LIMITS.seedsPerRanger)) {
       try { out.push({ ranger, repo, raw: JSON.parse(fs.readFileSync(path.join(dir, `${repo}.json`), 'utf8')) }); }

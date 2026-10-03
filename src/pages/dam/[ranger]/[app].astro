@@ -9,7 +9,7 @@ import TrustMark from '../../../components/TrustMark.astro';
 import ItemFace from '../../../components/ItemFace.astro';
 import ShareCard from '../../../components/ShareCard.astro';
 import Cmd from '../../../components/Cmd.astro';
-import { loadShare } from '../../../lib/registry';
+import { loadShare, rangerPath, woltPath } from '../../../lib/registry';
 
 export async function getStaticPaths() {
   const { rangers } = await loadShare();
@@ -23,14 +23,14 @@ const others = ranger.apps.filter((a) => a.seed.repo === app.seed.repo && a.name
 const source = app.distribution === 'git' ? app.sourceUrl.replace('https://github.com/', '') : `${app.seed.ranger}/${app.seed.repo}`;
 ---
 <Page title={app.name} description={app.description || `${app.name}, an app shared by ${app.ranger}.`} path={`/dam/${app.ranger}/${app.name}`} critter={keeper && ['beaver', 'raccoon', 'otter'].includes(keeper.type) ? (keeper.type as any) : undefined} wide>
-  <p class="back"><a href="/">woltspace</a> / <a href="/dam">dam</a> / <a href={`/rangers/${app.ranger}`}>{app.ranger}</a> / {app.name}</p>
+  <p class="back"><a href="/">woltspace</a> / <a href="/dam">dam</a> / <a href={rangerPath(app.ranger)}>{app.ranger}</a> / {app.name}</p>
 
   {!app.verified && <Warning kind="app" ranger={app.ranger} />}
 
   <header class="wolt-head">
     <ItemFace emoji={app.emoji || '📦'} />
     <div class="wolt-id">
-      <p class="wolt-path"><a href={`/rangers/${app.ranger}`}>{app.ranger}</a> / <b>{app.name}</b></p>
+      <p class="wolt-path"><a href={rangerPath(app.ranger)}>{app.ranger}</a> / <b>{app.name}</b></p>
       <h1>{app.name}</h1>
       <p class="wolt-role">An app on the dam</p>
     </div>
@@ -72,7 +72,7 @@ const source = app.distribution === 'git' ? app.sourceUrl.replace('https://githu
       <table class="facts">
         {app.stack && <tr><td>Stack</td><td>{app.stack}</td></tr>}
         {app.start && <tr><td>It runs</td><td><code>{app.start}</code></td></tr>}
-        {app.keeper && <tr><td>Kept by</td><td>{keeper ? <a href={`/wolts/${keeper.ranger}/${keeper.name}`}>{keeper.name}</a> : app.keeper}</td></tr>}
+        {app.keeper && <tr><td>Kept by</td><td>{keeper ? <a href={woltPath(keeper.ranger, keeper.name)}>{keeper.name}</a> : app.keeper}</td></tr>}
         <tr><td>Profile</td><td>as reviewed when it was shared{!app.verified && '. The app itself lives in their repo and can change at any time.'}</td></tr>
       </table>
     </section>

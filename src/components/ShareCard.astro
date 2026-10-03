@@ -4,11 +4,11 @@
 import ItemFace from './ItemFace.astro';
 import TrustMark from './TrustMark.astro';
 import Stars from './Stars.astro';
-import type { Wolt, App } from '../lib/registry';
+import { woltPath, type Wolt, type App } from '../lib/registry';
 interface Props { wolt?: Wolt; app?: App; showRanger?: boolean }
 const { wolt, app, showRanger = true } = Astro.props;
 const item = (wolt ?? app)!;
-const href = wolt ? `/wolts/${item.ranger}/${item.name}` : `/dam/${item.ranger}/${item.name}`;
+const href = wolt ? woltPath(item.ranger, item.name) : `/dam/${item.ranger}/${item.name}`;
 const line = wolt ? wolt.role || wolt.description : app!.description;
 const kind = wolt ? wolt.type : app!.stack;
 ---

@@ -1,5 +1,5 @@
 ---
-// One template for every shared wolt. Served at /wolts/<ranger>/<wolt>.
+// One template for every shared wolt. Served at /<ranger>/<wolt>.
 import Page from '../layouts/Page.astro';
 import Warning from './Warning.astro';
 import Byline from './Byline.astro';
@@ -7,22 +7,22 @@ import Stars from './Stars.astro';
 import TrustMark from './TrustMark.astro';
 import Cmd from './Cmd.astro';
 import ItemFace from './ItemFace.astro';
-import type { Wolt } from '../lib/registry';
+import { rangerPath, woltPath, type Wolt } from '../lib/registry';
 import { critters, type Critter } from '../lib/pixels';
 
 interface Props { wolt: Wolt; path: string }
 const { wolt, path } = Astro.props;
-const canonical = `/wolts/${wolt.ranger}/${wolt.name}`;
+const canonical = woltPath(wolt.ranger, wolt.name);
 const pageUrl = `https://woltspace.com${path}`;
 const heading = [wolt.title, wolt.emoji].filter(Boolean).join(' ');
 // The share card, drawn at build time (lib/share-card.ts).
-const ogImage = `/wolts/${wolt.ranger}/${wolt.name}/og.png`;
+const ogImage = `${canonical}/og.png`;
 const critter = wolt.type in critters ? (wolt.type as Critter) : undefined;
 const extras = [...wolt.siblings.map((n) => `wolt ${n}`), ...wolt.apps.map((n) => `app ${n}`)];
 const skillCount = `${wolt.skills.length} ${wolt.skills.length === 1 ? 'skill' : 'skills'}`;
 ---
 <Page title={heading} description={wolt.description || `${wolt.title}, a wolt shared by ${wolt.ranger}.`} path={path} canonical={canonical} ogImage={ogImage} critter={critter} wide>
-  <p class="back"><a href="/">woltspace</a> / <a href="/wolts">wolts</a> / <a href={`/rangers/${wolt.ranger}`}>{wolt.ranger}</a> / {wolt.name}</p>
+  <p class="back"><a href="/">woltspace</a> / <a href="/wolts">wolts</a> / <a href={rangerPath(wolt.ranger)}>{wolt.ranger}</a> / {wolt.name}</p>
 
   {!wolt.verified && <Warning kind="wolt" ranger={wolt.ranger} />}
 
@@ -30,7 +30,7 @@ const skillCount = `${wolt.skills.length} ${wolt.skills.length === 1 ? 'skill' :
   <header class="wolt-head">
     <ItemFace type={wolt.type} emoji={wolt.emoji} />
     <div class="wolt-id">
-      <p class="wolt-path"><a href={`/rangers/${wolt.ranger}`}>{wolt.ranger}</a> / <b>{wolt.name}</b></p>
+      <p class="wolt-path"><a href={rangerPath(wolt.ranger)}>{wolt.ranger}</a> / <b>{wolt.name}</b></p>
       <h1>{wolt.title}</h1>
       <p class="wolt-role">{wolt.role || `A ${wolt.type || 'wolt'}`}</p>
     </div>
@@ -77,7 +77,7 @@ const skillCount = `${wolt.skills.length} ${wolt.skills.length === 1 ? 'skill' :
       <Byline login={wolt.ranger} />
       <h2 class="label">In the same seed</h2>
       {extras.length
-        ? <ul class="side-list">{wolt.siblings.map((n) => <li><a href={`/wolts/${wolt.ranger}/${n}`}>{n}</a></li>)}{wolt.apps.map((n) => <li><a href={`/dam/${wolt.ranger}/${n}`}>{n}</a> <span class="hint">app</span></li>)}</ul>
+        ? <ul class="side-list">{wolt.siblings.map((n) => <li><a href={woltPath(wolt.ranger, n)}>{n}</a></li>)}{wolt.apps.map((n) => <li><a href={`/dam/${wolt.ranger}/${n}`}>{n}</a> <span class="hint">app</span></li>)}</ul>
         : <p class="hint">Nothing else. {wolt.title} comes alone.</p>}
       <h2 class="label">Source</h2>
       <p class="side-src"><a href={wolt.treeUrl}>{wolt.seed.ranger}/{wolt.seed.repo}</a></p>

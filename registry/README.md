@@ -32,9 +32,9 @@ Your **ranger** name is your GitHub name. There is no sign-up.
 
 3. Once it is merged you get:
 
-   - `woltspace.com/wolts/you/<wolt>` for every wolt in the file
+   - `woltspace.com/you/<wolt>` for every wolt in the file
    - `woltspace.com/dam/you/<app>` for every app in the file
-   - `woltspace.com/rangers/you`, your ranger page
+   - `woltspace.com/you`, your ranger page
 
 What is in the file is exactly what the page shows. Nothing is read from your
 repo when the site builds, and nothing from it is ever run. (Visitors' browsers
@@ -51,6 +51,7 @@ ask GitHub for its star count.) To change a page, change the file in a new pull 
 - Every shared wolt and app is shown as **unverified third party**, with a
   warning, unless Woltspace made it.
 - Badges (`src/data/rangers.json`) are handed out by Woltspace.
+- Names of site pages (docs, wolts, dam, rangers, blog...) cannot be rangers.
 - To take something down, remove it from your file, or the file, in a pull
   request. Woltspace can remove any entry.
 
