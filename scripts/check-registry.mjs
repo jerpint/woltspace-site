@@ -1,11 +1,9 @@
-// Checks the registry files. Run: node scripts/check-registry.mjs
-// On a pull request, PR_AUTHOR and CHANGED_FILES (one path per line) add the
-// ownership rule: you can only add or change files under registry/<your GitHub name>/.
+// Checks the registry files. Run by hand: node scripts/check-registry.mjs
+// Nothing runs it automatically; a reviewer or a throwaway lodge can.
 import fs from 'node:fs';
 import path from 'node:path';
 import { checkEntry, LOGIN_RE, LIMITS } from '../src/lib/profile.mjs';
 
-const MAINTAINERS = ['jerpint', 'woltspace-jerpint[bot]'];
 const errors = [];
 
 for (const ranger of fs.existsSync('registry') ? fs.readdirSync('registry') : []) {
@@ -20,15 +18,6 @@ for (const ranger of fs.existsSync('registry') ? fs.readdirSync('registry') : []
     let raw;
     try { raw = JSON.parse(fs.readFileSync(where, 'utf8')); } catch { errors.push(`${where}: not valid JSON`); continue; }
     for (const error of checkEntry(raw, ranger, file.slice(0, -5)).errors) errors.push(`${where}: ${error}`);
-  }
-}
-
-const author = process.env.PR_AUTHOR;
-if (author && !MAINTAINERS.includes(author.toLowerCase())) {
-  for (const file of (process.env.CHANGED_FILES || '').split('\n').filter(Boolean)) {
-    const parts = file.split('/');
-    const own = parts.length === 3 && parts[0] === 'registry' && parts[1].toLowerCase() === author.toLowerCase();
-    if (!own) errors.push(`${file}: @${author} can only change registry/${author}/`);
   }
 }
 

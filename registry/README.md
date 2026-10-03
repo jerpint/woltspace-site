@@ -44,14 +44,23 @@ ever run. To change a page, change the file in a new pull request.
 
 - You can only add or change files under `registry/<your GitHub name>/`. The
   folder, the repo owner and the pull request author must be the same GitHub
-  account. A check enforces it, with the rules as they are on `main`.
+  account.
 - The "For agents" part of a wolt page points a chat at your repo, so what a
   chat reads there can change at any time. That is why the page warns.
 - Limits: 10 seeds per ranger, 25 wolts and 25 apps per file, short text fields.
-  The check tells you what is wrong.
 - Every shared wolt and app is shown as **unverified third party**, with a
   warning, unless Woltspace made it.
 - Badges (`src/data/rangers.json`) and short links like `/wolts/onboardie`
   (redirects in `vercel.json`) are handed out by Woltspace.
 - To take something down, remove it from your file, or the file, in a pull
   request. Woltspace can remove any entry.
+
+## Reviewing a pull request
+
+Nothing checks a pull request automatically. Before merging:
+
+1. The pull request changes **one file**, `registry/<name>/<repo>.json`.
+2. `<name>` is the pull request author, and the `"repo"` line starts with it.
+3. Read the file. Its text is what the page will show.
+
+Optional: `node scripts/check-registry.mjs` says if a field is wrong or too long.
