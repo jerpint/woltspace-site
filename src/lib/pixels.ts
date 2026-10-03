@@ -84,21 +84,20 @@ export const clouds = [
   sprite(['...OOO..OOO....', '..OwWwOOwWwO...', '.OwWWWwwWWWwO..', '.OwwWWWWWWwwO..', '.OwWWWWWWWWwO..', '.OwwWWWWWWwwO..', '.OssssssssssO..', '..OOOOOOOOOO...'], cloudPalette),
 ];
 
-// A 1200x630 share picture: the landscape, with the critter (if we draw that
-// creature) standing on the bank. No text: chat apps print the title and
-// description under the picture.
-export function ogSvg(critter?: Critter): string {
-  const width = 1200, height = 630;
-  // Place a whole <svg> inside the picture: drop its own size, give it ours.
-  const place = (svg: string, x: number, y: number, w: number, h: number) =>
-    svg.replace(/^<svg([^>]*)>/, (_, attrs: string) => `<svg${attrs.replace(/\s(width|height)="[^"]*"/g, '')} x="${x}" y="${y}" width="${w}" height="${h}">`);
-  const scene = place(sceneSvg(80), 0, 0, width, height);
+// The right-hand art of a share card (516x630): a close-up of the landscape,
+// 30px per landscape pixel, with the critter (if we draw that creature) on the
+// bank. Drawn as rects at its final size, so it stays crisp without scaling.
+export function cardSceneSvg(critter?: Critter, firstCol = 10): string {
+  const width = 516, height = 630, unit = 30, firstRow = 17;
+  const view = `${firstCol * S} ${firstRow * S} ${(width / unit) * S} ${(height / unit) * S}`;
+  const scene = sceneSvg(firstCol + 24)
+    .replace(/^<svg([^>]*)>/, (_, attrs: string) => `<svg${attrs.replace(/\s(width|height|viewBox)="[^"]*"/g, '')} viewBox="${view}" width="${width}" height="${height}">`);
   let who = '';
   if (critter && critters[critter]) {
     const { svg, cols, rows } = critters[critter];
-    const px = Math.floor(220 / rows), w = cols * px, h = rows * px;
-    const bank = Math.round((BANK / H) * height);
-    who = place(svg, Math.round((width - w) / 2), bank - h + px * 2, w, h);
+    const px = 13, w = cols * px, h = rows * px;
+    const feet = (BANK - firstRow) * unit + 125;
+    who = svg.replace(/^<svg([^>]*)>/, (_, attrs: string) => `<svg${attrs} x="120" y="${feet - h}" width="${w}" height="${h}">`);
   }
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" shape-rendering="crispEdges">${scene}${who}</svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" shape-rendering="crispEdges">${scene}${who}</svg>`;
 }

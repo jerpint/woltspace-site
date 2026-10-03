@@ -15,8 +15,7 @@ const { wolt, path } = Astro.props;
 const canonical = `/wolts/${wolt.ranger}/${wolt.name}`;
 const pageUrl = `https://woltspace.com${path}`;
 const heading = [wolt.title, wolt.emoji].filter(Boolean).join(' ');
-// The share picture: hand-made at public/wolts/<ranger>/<wolt>/og.png, or drawn at
-// build time at the same address (pages/wolts/[ranger]/[wolt]/og.png.ts).
+// The share card, drawn at build time (lib/share-card.ts).
 const ogImage = `/wolts/${wolt.ranger}/${wolt.name}/og.png`;
 const critter = wolt.type in critters ? (wolt.type as Critter) : undefined;
 const extras = [...wolt.siblings.map((n) => `wolt ${n}`), ...wolt.apps.map((n) => `app ${n}`)];
