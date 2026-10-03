@@ -4,6 +4,7 @@
 import Page from '../../../layouts/Page.astro';
 import Warning from '../../../components/Warning.astro';
 import Byline from '../../../components/Byline.astro';
+import Stars from '../../../components/Stars.astro';
 import TrustMark from '../../../components/TrustMark.astro';
 import ItemFace from '../../../components/ItemFace.astro';
 import ShareCard from '../../../components/ShareCard.astro';
@@ -33,7 +34,7 @@ const source = app.distribution === 'git' ? app.sourceUrl.replace('https://githu
       <h1>{app.name}</h1>
       <p class="wolt-role">An app on the dam</p>
     </div>
-    {app.seed.stars !== null && <a class="person-stars wolt-stars" href={app.seed.url} title="Stars on GitHub">★ {app.seed.stars}</a>}
+    <Stars seed={app.seed} class="person-stars wolt-stars" />
   </header>
   <p class="tags">
     <TrustMark verified={app.verified} />

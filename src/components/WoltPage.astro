@@ -5,6 +5,7 @@ import fs from 'node:fs';
 import Page from '../layouts/Page.astro';
 import Warning from './Warning.astro';
 import Byline from './Byline.astro';
+import Stars from './Stars.astro';
 import TrustMark from './TrustMark.astro';
 import Cmd from './Cmd.astro';
 import ItemFace from './ItemFace.astro';
@@ -34,7 +35,7 @@ const skillCount = `${wolt.skills.length} ${wolt.skills.length === 1 ? 'skill' :
       <h1>{wolt.title}</h1>
       <p class="wolt-role">{wolt.role || `A ${wolt.type || 'wolt'}`}</p>
     </div>
-    {wolt.seed.stars !== null && <a class="person-stars wolt-stars" href={wolt.seed.url} title="Stars on GitHub">★ {wolt.seed.stars}</a>}
+    <Stars seed={wolt.seed} class="person-stars wolt-stars" />
   </header>
   <p class="tags">
     <TrustMark verified={wolt.verified} />

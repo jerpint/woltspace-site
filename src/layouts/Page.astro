@@ -54,6 +54,31 @@ const site = 'https://woltspace.com';
     catch { button.textContent = 'Select & copy'; }
     setTimeout(() => { button.textContent = 'Copy'; }, 1500);
   }));
+
+  // GitHub stars, asked of GitHub's public API by this browser: one call per repo
+  // on the page, kept for 10 minutes. Only a number is read, and set as text.
+  (function () {
+    var spots = document.querySelectorAll('[data-stars]');
+    var repos = {};
+    spots.forEach(function (el) { (repos[el.dataset.stars] = repos[el.dataset.stars] || []).push(el); });
+    Object.keys(repos).forEach(function (slug) {
+      var key = 'stars:' + slug, cached = null;
+      try { cached = JSON.parse(sessionStorage.getItem(key)); } catch (e) {}
+      var show = function (n) {
+        if (typeof n !== 'number') return;
+        repos[slug].forEach(function (el) { el.querySelector('span').textContent = n; el.hidden = false; });
+      };
+      if (cached && Date.now() - cached.at < 600000) return show(cached.n);
+      fetch('https://api.github.com/repos/' + slug, { headers: { accept: 'application/vnd.github+json' } })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (d) {
+          if (!d) return;
+          try { sessionStorage.setItem(key, JSON.stringify({ n: d.stargazers_count, at: Date.now() })); } catch (e) {}
+          show(d.stargazers_count);
+        })
+        .catch(function () {});
+    });
+  })();
 </script>
 </body>
 </html>
@@ -110,6 +135,7 @@ const site = 'https://woltspace.com';
   .person-name:hover { color: var(--accent); }
   .person-sub { grid-column: 2; font-size: 13px; color: var(--soft); align-self: start; }
   .person-stars { grid-column: 3; grid-row: 1 / span 2; font-size: 14px; color: var(--soft); text-decoration: none; border: 1px solid var(--line); border-radius: 10px; padding: 6px 10px; white-space: nowrap; }
+  [data-stars][hidden] { display: none !important; }
   .person-stars:hover { border-color: var(--accent); color: var(--accent); }
   h1 + .person { margin-top: 16px; }
   .badge { display: inline-block; font-size: 12px; font-weight: 600; border-radius: 99px; padding: 2px 10px; border: 1px solid var(--line); color: var(--soft); white-space: nowrap; }

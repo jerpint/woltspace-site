@@ -1,7 +1,8 @@
 // Shared wolts and apps. Each registry/<ranger>/<repo>.json holds the profiles
 // of the wolts and apps shown from that seed, exactly as merged. The build
 // reads only those files: an edit in someone's repo changes nothing here until
-// a pull request brings it in. Only GitHub stars are fetched at build time.
+// a pull request brings it in. Nothing is fetched at build time (stars are
+// filled in by the visitor's browser, see components/Stars.astro).
 import fs from 'node:fs';
 import path from 'node:path';
 import rangerExtras from '../data/rangers.json';
@@ -11,7 +12,7 @@ const REGISTRY_DIR = path.resolve(process.env.REGISTRY_DIR || 'registry');
 const EMOJI: Record<string, string> = { otter: '🦦', beaver: '🦫', raccoon: '🦝', wolf: '🐺', dog: '🐶' };
 
 export interface Ranger { login: string; badge: string | null; verified: boolean; wolts: Wolt[]; apps: App[] }
-export interface Seed { ranger: string; repo: string; url: string; gitUrl: string; stars: number | null }
+export interface Seed { ranger: string; repo: string; url: string; gitUrl: string }
 export interface Wolt {
   ranger: string; name: string; title: string; type: string; emoji: string; role: string; description: string;
   skills: string[]; seed: Seed; verified: boolean; identityUrl: string; treeUrl: string; siblings: string[]; apps: string[];
@@ -23,19 +24,6 @@ export interface App {
 export interface Share { rangers: Ranger[]; wolts: Wolt[]; apps: App[] }
 
 const title = (name: string) => name.charAt(0).toUpperCase() + name.slice(1);
-
-// Stars are the one live number; a failure here never drops a page.
-async function stars(owner: string, repo: string): Promise<number | null> {
-  if (process.env.SEED_FIXTURES) return null;
-  try {
-    const headers: Record<string, string> = { accept: 'application/vnd.github+json' };
-    if (process.env.GITHUB_TOKEN) headers.authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
-    const response = await fetch(`https://api.github.com/repos/${owner}/${repo}`, { headers, signal: AbortSignal.timeout(15000) });
-    return response.ok ? (await response.json()).stargazers_count ?? null : null;
-  } catch {
-    return null;
-  }
-}
 
 function registryFiles(): { ranger: string; repo: string; raw: unknown }[] {
   if (!fs.existsSync(REGISTRY_DIR)) return [];
@@ -64,7 +52,7 @@ async function load(): Promise<Share> {
     if (!rangers.has(ranger)) rangers.set(ranger, { login: ranger, badge: extra.badge ?? null, verified: extra.verified === true, wolts: [], apps: [] });
     const entry = rangers.get(ranger)!;
     const url = `https://github.com/${ranger}/${repo}`;
-    const seed: Seed = { ranger, repo, url, gitUrl: `${url}.git`, stars: await stars(ranger, repo) };
+    const seed: Seed = { ranger, repo, url, gitUrl: `${url}.git` };
     const woltData = (data.wolts ?? []).filter((w: any) => NAME_RE.test(w?.name ?? ''));
     const appData = (data.apps ?? []).filter((a: any) => NAME_RE.test(a?.name ?? ''));
     const woltNames: string[] = woltData.map((w: any) => w.name);

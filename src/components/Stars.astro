@@ -1,0 +1,12 @@
+---
+// GitHub stars, filled in by the visitor's browser (script in Page.astro). The
+// build fetches nothing. Hidden until the number arrives; if GitHub does not
+// answer, nothing shows. Inside a card (already a link) it is a plain span.
+import type { Seed } from '../lib/registry';
+interface Props { seed: Seed; link?: boolean; class?: string }
+const { seed, link = true, class: cls } = Astro.props;
+const slug = `${seed.ranger}/${seed.repo}`;
+---
+{link
+  ? <a class={cls} href={seed.url} title="Stars on GitHub" data-stars={slug} hidden>★ <span></span></a>
+  : <span class={cls} data-stars={slug} hidden>★ <span></span></span>}
