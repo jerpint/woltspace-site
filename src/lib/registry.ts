@@ -1,15 +1,11 @@
-// Shared wolts and apps. registry/<ranger>/<repo>.json says which seed repos
-// exist; scripts/snapshot.mjs reads them on a timer and writes one snapshot to
-// the `share-data` branch. Pages are built from that snapshot, so a build
-// never reads a seed. Nothing is pinned: a page follows its repo, as of the
-// last snapshot.
-import fs from 'node:fs';
+// Shared wolts and apps. registry/<ranger>/<repo>.json names a seed repo and
+// the wolts and apps in it that may be shown; seeds.mjs reads them when the
+// site builds. A new wolt appears only when a pull request lists it. Nothing is
+// pinned: a listed wolt's page follows its repo, as of the last build.
 import rangerExtras from '../data/rangers.json';
 import shortLinkData from '../data/short-links.json';
-import committedSnapshot from '../data/share.json';
+import { readSeeds } from './seeds.mjs';
 
-// The freshest snapshot. The copy committed in src/data/share.json is the fallback.
-const SNAPSHOT_URL = 'https://raw.githubusercontent.com/jerpint/woltspace-site/share-data/share.json';
 const LOGIN_RE = /^[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})$/;
 const REPO_RE = /^[A-Za-z0-9._-]{1,100}$/;
 const NAME_RE = /^[a-z0-9][a-z0-9_-]{0,63}$/;
@@ -29,25 +25,11 @@ export interface Share { rangers: Ranger[]; wolts: Wolt[]; apps: App[]; shortLin
 
 const title = (name: string) => name.charAt(0).toUpperCase() + name.slice(1);
 
-async function readSnapshot(): Promise<any> {
-  // SHARE_SNAPSHOT: build from a local snapshot file (tests, offline dev).
-  if (process.env.SHARE_SNAPSHOT) return JSON.parse(fs.readFileSync(process.env.SHARE_SNAPSHOT, 'utf8'));
-  try {
-    const response = await fetch(SNAPSHOT_URL, { signal: AbortSignal.timeout(15000) });
-    if (response.ok) return await response.json();
-    console.warn(`registry: snapshot answered ${response.status}, using the committed copy`);
-  } catch (error) {
-    console.warn(`registry: snapshot not reachable (${error}), using the committed copy`);
-  }
-  return committedSnapshot;
-}
-
 async function load(): Promise<Share> {
   const extras = rangerExtras as Record<string, { badge?: string; verified?: boolean }>;
-  const snapshot = await readSnapshot();
   const rangers = new Map<string, Ranger>();
 
-  for (const data of Array.isArray(snapshot?.seeds) ? snapshot.seeds : []) {
+  for (const data of await readSeeds()) {
     if (!LOGIN_RE.test(data?.ranger ?? '') || !REPO_RE.test(data?.repo ?? '')) continue;
     const { ranger, repo } = data;
     const extra = extras[ranger.toLowerCase()] ?? {};

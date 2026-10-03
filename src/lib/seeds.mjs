@@ -1,14 +1,12 @@
-// Reads every seed named in registry/ and writes one snapshot of what they
-// hold. The site is built from that snapshot, never from the seeds directly.
-// Run: node scripts/snapshot.mjs [out.json]   (default: src/data/share.json)
+// Reads the seeds named in registry/ when the site builds. Only the wolts and
+// apps a registry file lists are read: a new wolt appears when a pull request
+// adds its name, never on its own.
 //
 // A seed that is gone (404), too big or malformed is left out. Any other
-// failure (GitHub down, rate limit) exits non-zero and writes nothing, so the
-// last good snapshot stays in place.
+// failure (GitHub down, rate limit) fails the build, so the live site stays as it was.
 import fs from 'node:fs';
 import path from 'node:path';
 
-const OUT = process.argv[2] || 'src/data/share.json';
 const REGISTRY_DIR = path.resolve(process.env.REGISTRY_DIR || 'registry');
 // Local seed checkouts at <dir>/<owner>/<repo>/, read instead of GitHub when present (tests, offline dev).
 const SEED_FIXTURES = process.env.SEED_FIXTURES ? path.resolve(process.env.SEED_FIXTURES) : null;
@@ -18,7 +16,7 @@ const fixture = (owner, repo) => {
 };
 
 const SEED_FORMAT = 'woltspace.colony-seed/v1';
-// Limits, so one seed cannot flood the site.
+// Limits, so one ranger cannot flood the site.
 const MAX_SEEDS_PER_RANGER = 10;
 const MAX_WOLTS_PER_SEED = 25;
 const MAX_APPS_PER_SEED = 25;
@@ -68,6 +66,8 @@ async function repoFacts(owner, repo) {
   }
 }
 
+const listed = (value, max) => (Array.isArray(value) ? value.filter((name) => NAME_RE.test(name ?? '')).slice(0, max) : []);
+
 function registryEntries() {
   if (!fs.existsSync(REGISTRY_DIR)) return [];
   const entries = [];
@@ -76,22 +76,29 @@ function registryEntries() {
     if (!LOGIN_RE.test(ranger) || !fs.statSync(dir).isDirectory()) continue;
     const repos = fs.readdirSync(dir).sort().filter((file) => file.endsWith('.json')).map((file) => file.slice(0, -5)).filter((repo) => REPO_RE.test(repo));
     if (repos.length > MAX_SEEDS_PER_RANGER) console.warn(`${ranger} has ${repos.length} seeds, keeping the first ${MAX_SEEDS_PER_RANGER}`);
-    for (const repo of repos.slice(0, MAX_SEEDS_PER_RANGER)) entries.push({ ranger, repo });
+    for (const repo of repos.slice(0, MAX_SEEDS_PER_RANGER)) {
+      let entry = {};
+      try { entry = JSON.parse(fs.readFileSync(path.join(dir, `${repo}.json`), 'utf8')); } catch { console.warn(`registry/${ranger}/${repo}.json is not valid JSON`); continue; }
+      entries.push({ ranger, repo, wolts: listed(entry.wolts, MAX_WOLTS_PER_SEED), apps: listed(entry.apps, MAX_APPS_PER_SEED) });
+    }
   }
   return entries;
 }
 
-async function readSeed(ranger, repo) {
+async function readSeed({ ranger, repo, wolts: allowedWolts, apps: allowedApps }) {
   const skip = (why) => { console.warn(`skipping ${ranger}/${repo}: ${why}`); return null; };
   const manifest = await readSeedJson(ranger, repo, 'seed.json');
   if (!manifest) return skip('no readable seed.json');
   if (manifest.format !== SEED_FORMAT) return skip(`unknown seed format ${manifest.format}`);
-  if (named(manifest.wolts).length > MAX_WOLTS_PER_SEED || named(manifest.apps).length > MAX_APPS_PER_SEED) {
-    console.warn(`${ranger}/${repo} is over the limit (${MAX_WOLTS_PER_SEED} wolts, ${MAX_APPS_PER_SEED} apps); keeping the first ones`);
-  }
+  // Only what the registry lists. Something in the seed but not listed waits for a pull request.
+  const inSeed = (list, allowed, kind) => {
+    const entries = named(list);
+    for (const name of allowed) if (!entries.some((e) => e.name === name)) console.warn(`${ranger}/${repo}: listed ${kind} ${name} is not in the seed`);
+    return entries.filter((e) => allowed.includes(e.name));
+  };
 
   const wolts = [];
-  for (const entry of named(manifest.wolts).slice(0, MAX_WOLTS_PER_SEED)) {
+  for (const entry of inSeed(manifest.wolts, allowedWolts, 'wolt')) {
     const config = await readSeedJson(ranger, repo, `wolts/${entry.name}/wolt.json`);
     if (!config) { console.warn(`${ranger}/${repo}: wolt ${entry.name} has no wolt.json`); continue; }
     wolts.push({
@@ -101,7 +108,7 @@ async function readSeed(ranger, repo) {
   }
 
   const apps = [];
-  for (const entry of named(manifest.apps).slice(0, MAX_APPS_PER_SEED)) {
+  for (const entry of inSeed(manifest.apps, allowedApps, 'app')) {
     const distribution = entry.distribution === 'git' ? 'git' : 'bundled';
     let appManifest = null;
     let sourceUrl = `https://github.com/${ranger}/${repo}/tree/HEAD/apps/${entry.name}`;
@@ -123,11 +130,11 @@ async function readSeed(ranger, repo) {
   return { ranger, repo, ...(await repoFacts(ranger, repo)), wolts, apps };
 }
 
-const seeds = [];
-for (const { ranger, repo } of registryEntries()) {
-  const seed = await readSeed(ranger, repo);
-  if (seed) seeds.push(seed);
+export async function readSeeds() {
+  const seeds = [];
+  for (const entry of registryEntries()) {
+    const seed = await readSeed(entry);
+    if (seed) seeds.push(seed);
+  }
+  return seeds;
 }
-fs.mkdirSync(path.dirname(OUT), { recursive: true });
-fs.writeFileSync(OUT, JSON.stringify({ seeds }, null, 2) + '\n');
-console.log(`snapshot: ${seeds.length} seeds, ${seeds.reduce((n, s) => n + s.wolts.length, 0)} wolts, ${seeds.reduce((n, s) => n + s.apps.length, 0)} apps -> ${OUT}`);

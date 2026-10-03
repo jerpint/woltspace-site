@@ -1,3 +1,7 @@
 {
-  "repo": "jerpint/woltspace-starter-lodge"
+  "repo": "jerpint/woltspace-starter-lodge",
+  "wolts": [
+    "onboardie"
+  ],
+  "apps": []
 }
