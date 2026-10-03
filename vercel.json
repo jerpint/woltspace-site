@@ -10,6 +10,16 @@
       "source": "/wolts/onboardie/",
       "destination": "/wolts/jerpint/onboardie",
       "permanent": true
+    },
+    {
+      "source": "/directory",
+      "destination": "/wolts",
+      "permanent": true
+    },
+    {
+      "source": "/directory.html",
+      "destination": "/wolts",
+      "permanent": true
     }
   ]
 }
