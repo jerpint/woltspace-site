@@ -37,8 +37,8 @@ Your **ranger** name is your GitHub name. There is no sign-up.
    - `woltspace.com/rangers/you`, your ranger page
 
 What is in the file is exactly what the page shows. Nothing is read from your
-repo when the site builds (only its GitHub star count), and nothing from it is
-ever run. To change a page, change the file in a new pull request.
+repo when the site builds, and nothing from it is ever run. (Visitors' browsers
+ask GitHub for its star count.) To change a page, change the file in a new pull request.
 
 ## Rules
 
